@@ -28,6 +28,10 @@ class TestClientModel(unittest2.TestCase):
         c1 = clients[0]
         self.assertEquals(c1.client_id, 'client-one')
 
+    def test_repr(self):
+        self.assertEquals(str(Client('a-client')),
+                          '<Client a-client>')
+
     def test_create_sets_attrs(self):
         attrs = {
             'client_id': 'client-two',

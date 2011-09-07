@@ -27,6 +27,10 @@ class TestGroupModel(unittest2.TestCase):
         g1 = groups[0]
         self.assertEquals(g1.groupid, 'group-one')
 
+    def test_repr(self):
+        self.assertEquals(str(Group('a-group')),
+                          '<Group a-group>')
+
     def test_create_sets_attrs(self):
         attrs = {
             'groupid': 'admins',

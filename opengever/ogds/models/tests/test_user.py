@@ -26,6 +26,10 @@ class TestUserModel(unittest2.TestCase):
         u1 = users[0]
         self.assertEquals(u1.userid, 'user-one')
 
+    def test_repr(self):
+        self.assertEquals(str(User('a-user')),
+                          '<User a-user>')
+
     def test_create_sets_attrs(self):
         attrs = {
             'userid': 'hugo.boss',
