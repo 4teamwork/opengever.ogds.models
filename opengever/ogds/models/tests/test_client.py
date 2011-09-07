@@ -18,7 +18,7 @@ class TestClientModel(unittest2.TestCase):
     def test_creatable(self):
         c1 = Client('client-one')
         self.session.add(c1)
-        self.session.commit()
+        self.layer.commit()
 
         clients = self.session.query(Client).all()
         self.assertEquals(len(clients), 1)

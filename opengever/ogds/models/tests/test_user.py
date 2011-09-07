@@ -18,7 +18,7 @@ class TestUserModel(unittest2.TestCase):
     def test_creatable(self):
         u1 = User('user-one')
         self.session.add(u1)
-        self.session.commit()
+        self.layer.commit()
 
         users = self.session.query(User).all()
         self.assertEquals(len(users), 1)
