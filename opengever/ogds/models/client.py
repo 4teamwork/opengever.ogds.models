@@ -5,7 +5,6 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 
-
 class Client(BASE):
     """Client model
     """
@@ -24,13 +23,13 @@ class Client(BASE):
     users_group = relationship(
         "Group",
         backref='client_group',
-        primaryjoin=users_group_id==Group.groupid)
+        primaryjoin=users_group_id == Group.groupid)
 
     inbox_group_id = Column(String(30), ForeignKey('groups.groupid'))
     inbox_group = relationship(
         "Group",
         backref='inbox_group',
-        primaryjoin=inbox_group_id==Group.groupid)
+        primaryjoin=inbox_group_id == Group.groupid)
 
     def __init__(self, client_id, **kwargs):
         self.client_id = client_id

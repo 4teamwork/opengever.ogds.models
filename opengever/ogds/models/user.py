@@ -45,5 +45,3 @@ class User(BASE):
 
     def __repr__(self):
         return '<User %s>' % self.userid
-
-

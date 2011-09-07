@@ -8,8 +8,10 @@ from sqlalchemy.orm import backref, relation
 # association table
 groups_users = Table(
     'groups_users', BASE.metadata,
-    Column('groupid', String(50), ForeignKey('groups.groupid'), primary_key=True),
-    Column('userid', String(30), ForeignKey('users.userid'), primary_key=True),
+    Column('groupid', String(50),
+           ForeignKey('groups.groupid'), primary_key=True),
+    Column('userid', String(30),
+           ForeignKey('users.userid'), primary_key=True),
     )
 
 
@@ -22,7 +24,8 @@ class Group(BASE):
     groupid = Column(String(50), primary_key=True)
     title = Column(String(50))
 
-    users = relation(User, secondary=groups_users, backref=backref('group_users'))
+    users = relation(User, secondary=groups_users,
+                     backref=backref('group_users'))
 
     def __init__(self, groupid, **kwargs):
         self.groupid = groupid
@@ -34,4 +37,3 @@ class Group(BASE):
 
     def __repr__(self):
         return '<Group %s>' % self.groupid
-
