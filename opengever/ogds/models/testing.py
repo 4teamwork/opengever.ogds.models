@@ -40,6 +40,7 @@ class DatabaseLayer(Layer):
 
         else:
             self.session.close()
+            self._session = None
             return True
 
     def commit(self):
