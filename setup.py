@@ -5,6 +5,8 @@ version = '1.0dev'
 maintainer = 'Jonas baumann'
 
 tests_require = [
+    'plone.testing',
+    'unittest2',
     ]
 
 setup(name='opengever.ogds.models',
