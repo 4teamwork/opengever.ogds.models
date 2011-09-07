@@ -6,6 +6,11 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 class DatabaseLayer(Layer):
 
+    def __init__(self, *args, **kwargs):
+        Layer.__init__(self, *args, **kwargs)
+        self._engine = None
+        self._session = None
+
     def testSetUp(self):
         self.disconnect()
         self.get_connection()
@@ -14,7 +19,7 @@ class DatabaseLayer(Layer):
         self.disconnect()
 
     def get_connection(self):
-        if '_engine' not in dir(self) or not self._engine:
+        if not self._engine:
             self._engine = create_engine('sqlite://')
 
             BASE.metadata.bind = self._engine
@@ -28,14 +33,14 @@ class DatabaseLayer(Layer):
 
     @property
     def session(self):
-        if '_session' not in dir(self) or not self._session:
+        if not self._session:
             self._session = scoped_session(sessionmaker(
                     bind=self.get_connection()))
 
         return self._session
 
     def close_session(self):
-        if '_session' not in dir(self) or not self._session:
+        if not self._session:
             return False
 
         else:
