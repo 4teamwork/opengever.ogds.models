@@ -1,4 +1,6 @@
 from opengever.ogds.models.client import Client
+from opengever.ogds.models.group import Group
+from opengever.ogds.models.user import User
 from opengever.ogds.models.testing import DATABASE_LAYER
 import unittest2
 
@@ -40,3 +42,53 @@ class TestClientModel(unittest2.TestCase):
 
         for key, value in attrs.items():
             self.assertEquals(getattr(c2, key), value)
+
+
+class TestClientGroups(unittest2.TestCase):
+
+    layer = DATABASE_LAYER
+
+    @property
+    def session(self):
+        return self.layer.session
+
+    def setUp(self):
+        client = Client('client')
+        inbox = Group('inbox')
+        members = Group('members')
+        john = User('john.doe')
+        hugo = User('hugo.boss')
+
+        # john and hugo are members
+        members.users.append(john)
+        members.users.append(hugo)
+
+        # only john is inbox user
+        inbox.users.append(john)
+
+        # set the groups on the client
+        client.inbox_group = inbox
+        client.users_group = members
+
+        self.session.add(client)
+        self.layer.commit()
+
+    def _get_user(self, userid):
+        return self.session.query(User).filter_by(userid=userid).one()
+
+    def _get_client(self):
+        return self.session.query(Client).filter_by(client_id='client').one()
+
+    def test_users_in_members_group(self):
+        self.assertIn(self._get_user('john.doe'),
+                      self._get_client().users_group.users)
+
+        self.assertIn(self._get_user('hugo.boss'),
+                      self._get_client().users_group.users)
+
+    def test_only_john_in_inbox_group(self):
+        self.assertIn(self._get_user('john.doe'),
+                      self._get_client().inbox_group.users)
+
+        self.assertNotIn(self._get_user('hugo.boss'),
+                         self._get_client().inbox_group.users)
