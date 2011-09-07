@@ -54,7 +54,7 @@ class TestUserModel(unittest2.TestCase):
 
             'country': 'Schweiz',
 
-            'import': 'stamp',
+            'import_stamp': 'stamp',
             }
 
         u2 = User(**attrs)
