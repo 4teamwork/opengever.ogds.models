@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0dev (unreleased)
--------------------
+1.0a1 (2011-09-29)
+------------------
 
 * Initial release
