@@ -5,7 +5,9 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Dropped Plone 4.1 compatibility. Only 4.2 and up are supported.
+  [lgraf]
+
 
 
 1.0 (2011-11-17)
