@@ -13,7 +13,7 @@ setup(name='opengever.ogds.models',
       version=version,
       description="Models for OpenGever directory service" + \
           ' (Maintainer %s)' % maintainer,
-      long_description=open("README.txt").read() + "\n" + \
+      long_description=open("README.rst").read() + "\n" + \
           open(os.path.join("docs", "HISTORY.txt")).read(),
       keywords='opengever ogds models',
 
