@@ -31,7 +31,7 @@ class Group(BASE):
         self.groupid = groupid
 
         for key, value in kwargs.items():
-            # provoke a AttributeError
+            # provoke an AttributeError
             getattr(self, key)
             setattr(self, key, value)
 

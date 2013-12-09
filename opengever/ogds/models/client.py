@@ -18,7 +18,7 @@ class Client(BASE):
     site_url = Column(String(100))
     public_url = Column(String(100))
 
-    # ehemals group
+    # formerly 'group'
     users_group_id = Column(String(30), ForeignKey('groups.groupid'))
     users_group = relationship(
         "Group",
@@ -34,7 +34,7 @@ class Client(BASE):
     def __init__(self, client_id, **kwargs):
         self.client_id = client_id
         for key, value in kwargs.items():
-            # provoke a AttributeError
+            # provoke an AttributeError
             getattr(self, key)
             setattr(self, key, value)
 

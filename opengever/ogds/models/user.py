@@ -39,7 +39,7 @@ class User(BASE):
     def __init__(self, userid, **kwargs):
         self.userid = userid
         for key, value in kwargs.items():
-            # provoke a AttributeError
+            # provoke an AttributeError
             getattr(self, key)
             setattr(self, key, value)
 
