@@ -21,7 +21,7 @@ class Group(BASE):
 
     __tablename__ = 'groups'
 
-    groupid = Column(String(50), primary_key=True)
+    groupid = Column(String(255), primary_key=True)
     title = Column(String(50))
 
     users = relation(User, secondary=groups_users,

@@ -5,9 +5,11 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Dropped Plone 4.1 compatibility. Only 4.2 and up are supported.
+- Increased lengths for `userid` and `groupid` columns to 255.
   [lgraf]
 
+- Dropped Plone 4.1 compatibility. Only 4.2 and up are supported.
+  [lgraf]
 
 
 1.0 (2011-11-17)
