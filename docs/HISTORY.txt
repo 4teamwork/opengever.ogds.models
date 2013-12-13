@@ -5,6 +5,9 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
+- Added helper function `alter_column_length` (used by upgrade steps in og.core).
+  [lgraf]
+
 - Increased lengths for `userid` and `groupid` columns to 255.
   [lgraf]
 
