@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.1 (unreleased)
+1.0.1 (2013-12-15)
 ------------------
 
 - Added helper function `alter_column_length` (used by upgrade steps in og.core).
