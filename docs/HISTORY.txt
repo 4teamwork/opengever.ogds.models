@@ -5,11 +5,15 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed include in MANIFEST that caused previous brown bag release.
+  [lknoepfel]
 
 
 1.0.1 (2013-12-15)
 ------------------
+
+- Moved package to GitHub.
+  [lknoepfel]
 
 - Added helper function `alter_column_length` (used by upgrade steps in og.core).
   [lgraf]
@@ -37,4 +41,4 @@ Changelog
 1.0a1 (2011-09-29)
 ------------------
 
-* Initial release
+- Initial release
