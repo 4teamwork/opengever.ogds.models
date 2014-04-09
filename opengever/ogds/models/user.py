@@ -45,3 +45,19 @@ class User(BASE):
 
     def __repr__(self):
         return '<User %s>' % self.userid
+
+    def label(self):
+        return "%s (%s)" % (self.fullname(), self.userid)
+
+    def fullname(self):
+        """return a visual representation of the UserPersona as String.
+             - The default is "<lastname> <firstname>"
+             - If either one is missing it is: "<lastname>" or "<firstname>"
+             - The fallback is "<userid>"
+        """
+        parts = []
+        self.lastname and parts.append(self.lastname)
+        self.firstname and parts.append(self.firstname)
+        len(parts) == 0 and parts.append(self.userid)
+
+        return ' '.join(parts)
