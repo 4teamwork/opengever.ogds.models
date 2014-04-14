@@ -5,7 +5,8 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed backref name of the groups_user join table.
+  [phgross]
 
 
 1.0.2 (2014-02-18)

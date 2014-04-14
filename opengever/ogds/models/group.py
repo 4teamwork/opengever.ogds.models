@@ -25,7 +25,7 @@ class Group(BASE):
     title = Column(String(50))
 
     users = relation(User, secondary=groups_users,
-                     backref=backref('group_users'))
+                     backref=backref('groups'))
 
     def __init__(self, groupid, **kwargs):
         self.groupid = groupid
