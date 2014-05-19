@@ -83,3 +83,6 @@ class TestClientGroups(unittest2.TestCase):
         self.assertEquals([self.john],
                           self.client.inbox_group.users)
 
+    def test_assigned_users_returns_all_users_from_the_usersgroup(self):
+        self.assertEquals([self.john, self.hugo],
+                          self.client.assigned_users())

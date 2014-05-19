@@ -40,3 +40,6 @@ class Client(BASE):
 
     def __repr__(self):
         return '<Client %s>' % self.client_id
+
+    def assigned_users(self):
+        return self.users_group.users
