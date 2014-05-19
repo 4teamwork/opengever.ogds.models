@@ -92,6 +92,23 @@ class TestServiceClientMethods(unittest2.TestCase):
     def test_fetch_client_returns_none_when_no_client_found(self):
         self.assertEquals(None,
                           self.service.fetch_client('not-existing-client'))
+
+    def test_fetch_org_unit_by_unit_id(self):
+        unit = self.service.fetch_org_unit('clientc')
+
+        self.assertEquals(self.client_c, unit._client)
+        self.assertEquals('<OrgUnit clientc>', unit.__repr__())
+
+    def test_fetch_org_unit_returns_none_when_no_client_found(self):
+        self.assertEquals(None,
+                          self.service.fetch_org_unit('not-existing-client'))
+
+    def test_fetch_admin_unit_by_unit_id(self):
+        unit = self.service.fetch_admin_unit('clientc')
+
+        self.assertEquals(self.client_c, unit._client)
+        self.assertEquals('<AdminUnit clientc>', unit.__repr__())
+
     def test_assigned_clients_returns_a_list_of_all_clients_which_the_user_group_contains_the_given_user(self):
         self.assertEquals(
             [self.client_a, self.client_c],
@@ -115,3 +132,30 @@ class TestServiceClientMethods(unittest2.TestCase):
             [self.client_a, self.client_c, self.client_b],
             self.service.all_clients(enabled_only=False))
 
+    def test_all_org_units_returns_list_all_enabled_clients_wrapped_as_orgunits(self):
+        units = self.service.all_org_units()
+
+        self.assertEquals(
+            ['<OrgUnit clienta>', '<OrgUnit clientc>'],
+            [u.__repr__() for u in units])
+
+    def test_all_org_units_includes_disabled_orgunits_when_flag_is_set(self):
+        units = self.service.all_org_units(enabled_only=False)
+
+        self.assertEquals(
+            ['<OrgUnit clienta>', '<OrgUnit clientc>', '<OrgUnit clientb>'],
+            [u.__repr__() for u in units])
+
+    def test_all_admin_units_returns_list_all_enabled_clients_wrapped_as_orgunits(self):
+        units = self.service.all_admin_units()
+
+        self.assertEquals(
+            ['<AdminUnit clienta>', '<AdminUnit clientc>'],
+            [u.__repr__() for u in units])
+
+    def test_all_admin_units_includes_disabled_orgunits_when_flag_is_set(self):
+        units = self.service.all_admin_units(enabled_only=False)
+
+        self.assertEquals(
+            ['<AdminUnit clienta>', '<AdminUnit clientc>', '<AdminUnit clientb>'],
+            [u.__repr__() for u in units])

@@ -1,6 +1,8 @@
+from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.exceptions import RecordNotFound
 from opengever.ogds.models.group import Group
+from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.user import User
 
 
@@ -48,3 +50,25 @@ class OGDSService(object):
         return self.session.query(Client).join(Client.users_group).join(
             Group.users).filter(User.userid == userid).all()
 
+    def fetch_org_unit(self, unit_id):
+        client = self.fetch_client(unit_id)
+        if client:
+            return OrgUnit(client)
+        return None
+
+    def all_org_units(self, enabled_only=True):
+        clients = self.all_clients(enabled_only=enabled_only)
+        return [OrgUnit(client) for client in clients]
+
+    def assigned_org_units(self, userid):
+        return [OrgUnit(client) for client in self.assigned_clients(userid)]
+
+    def fetch_admin_unit(self, unit_id):
+        client = self.fetch_client(unit_id)
+        if client:
+            return AdminUnit(client)
+        return None
+
+    def all_admin_units(self, enabled_only=True):
+        clients = self.all_clients(enabled_only=enabled_only)
+        return [AdminUnit(client) for client in clients]
