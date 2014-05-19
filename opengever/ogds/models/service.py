@@ -1,4 +1,6 @@
+from opengever.ogds.models.client import Client
 from opengever.ogds.models.exceptions import RecordNotFound
+from opengever.ogds.models.group import Group
 from opengever.ogds.models.user import User
 
 
@@ -28,3 +30,21 @@ class OGDSService(object):
 
     def inactive_users(self):
         return self.session.query(User).filter_by(active=False).all()
+
+    def fetch_client(self, client_id):
+        """returns a Client by it's client_id. None is returned when no client
+        is found. """
+
+        return self.session.query(Client).get(client_id)
+
+    def all_clients(self, enabled_only=True):
+        query = self.session.query(Client)
+        if enabled_only:
+            query = query.filter_by(enabled=True)
+
+        return query.all()
+
+    def assigned_clients(self, userid):
+        return self.session.query(Client).join(Client.users_group).join(
+            Group.users).filter(User.userid == userid).all()
+
