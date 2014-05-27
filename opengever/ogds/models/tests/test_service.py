@@ -1,3 +1,4 @@
+from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.exceptions import RecordNotFound
 from opengever.ogds.models.group import Group
@@ -78,9 +79,21 @@ class TestServiceClientMethods(unittest2.TestCase):
         group_a = Group('group_a', users=[hugo_boss])
         self.session.add(group_a)
 
-        self.client_a = Client('clienta', title="Client A", users_group=group_a)
-        self.client_b = Client('clientb', title="Client B", enabled=False)
-        self.client_c = Client('clientc', title="Client C", users_group=group_a)
+        self.admin_unit_1 = AdminUnit('unit_1',title="Admin Unit 1")
+        self.admin_unit_2 = AdminUnit('unit_2', title="Admin Unit 2",
+                                      enabled=False)
+        self.admin_unit_3 = AdminUnit('unit_3',title="Admin Unit 3")
+
+        self.session.add(self.admin_unit_1)
+        self.session.add(self.admin_unit_2)
+        self.session.add(self.admin_unit_3)
+
+        self.client_a = Client('clienta', title="Client A",
+                               users_group=group_a, admin_unit_id="unit_1")
+        self.client_b = Client('clientb', title="Client B",
+                               admin_unit_id="unit_2", enabled=False)
+        self.client_c = Client('clientc', title="Client C",
+                               users_group=group_a, admin_unit_id="unit_1")
         self.session.add(self.client_a)
         self.session.add(self.client_b)
         self.session.add(self.client_c)
@@ -104,10 +117,15 @@ class TestServiceClientMethods(unittest2.TestCase):
                           self.service.fetch_org_unit('not-existing-client'))
 
     def test_fetch_admin_unit_by_unit_id(self):
-        unit = self.service.fetch_admin_unit('clientc')
+        self.assertEquals(self.admin_unit_1,
+                          self.service.fetch_admin_unit('unit_1'))
 
-        self.assertEquals(self.client_c, unit._client)
-        self.assertEquals('<AdminUnit clientc>', unit.__repr__())
+    def test_fetching_disabled_admin_unit_by_unit_id(self):
+        self.assertEquals(self.admin_unit_2,
+                          self.service.fetch_admin_unit('unit_2'))
+
+    def test_fetch_not_existing_admin_unit_returns_none(self):
+        self.assertEquals(None, self.service.fetch_admin_unit('unit_5'))
 
     def test_assigned_clients_returns_a_list_of_all_clients_which_the_user_group_contains_the_given_user(self):
         self.assertEquals(
@@ -124,8 +142,7 @@ class TestServiceClientMethods(unittest2.TestCase):
 
     def test_all_clients_returns_list_of_all_enabled_clients_by_default(self):
         self.assertEquals(
-            [self.client_a, self.client_c],
-            self.service.all_clients())
+            [self.client_a, self.client_c], self.service.all_clients())
 
     def test_all_clients_includes_disabled_clients_when_disable_enabled_flag(self):
         self.assertEquals(
@@ -146,16 +163,12 @@ class TestServiceClientMethods(unittest2.TestCase):
             ['<OrgUnit clienta>', '<OrgUnit clientc>', '<OrgUnit clientb>'],
             [u.__repr__() for u in units])
 
-    def test_all_admin_units_returns_list_all_enabled_clients_wrapped_as_orgunits(self):
-        units = self.service.all_admin_units()
-
+    def test_all_admin_units_returns_a_list_of_all_enabled_admin_units(self):
         self.assertEquals(
-            ['<AdminUnit clienta>', '<AdminUnit clientc>'],
-            [u.__repr__() for u in units])
+            [self.admin_unit_1, self.admin_unit_3],
+            self.service.all_admin_units())
 
     def test_all_admin_units_includes_disabled_orgunits_when_flag_is_set(self):
-        units = self.service.all_admin_units(enabled_only=False)
-
         self.assertEquals(
-            ['<AdminUnit clienta>', '<AdminUnit clientc>', '<AdminUnit clientb>'],
-            [u.__repr__() for u in units])
+            [self.admin_unit_1, self.admin_unit_2, self.admin_unit_3],
+            self.service.all_admin_units(enabled_only=False))

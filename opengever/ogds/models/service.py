@@ -64,11 +64,11 @@ class OGDSService(object):
         return [OrgUnit(client) for client in self.assigned_clients(userid)]
 
     def fetch_admin_unit(self, unit_id):
-        client = self.fetch_client(unit_id)
-        if client:
-            return AdminUnit(client)
-        return None
+        return self.session.query(AdminUnit).get(unit_id)
 
     def all_admin_units(self, enabled_only=True):
-        clients = self.all_clients(enabled_only=enabled_only)
-        return [AdminUnit(client) for client in clients]
+        query = self.session.query(AdminUnit)
+        if enabled_only:
+            query = query.filter_by(enabled=True)
+
+        return query.all()

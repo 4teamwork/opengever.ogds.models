@@ -31,6 +31,8 @@ class Client(BASE):
         backref='inbox_group',
         primaryjoin=inbox_group_id == Group.groupid)
 
+    admin_unit_id = Column(String(30), ForeignKey('admin_units.unit_id'))
+
     def __init__(self, client_id, **kwargs):
         self.client_id = client_id
         for key, value in kwargs.items():
