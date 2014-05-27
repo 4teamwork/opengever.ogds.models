@@ -18,10 +18,7 @@ class AdminUnit(BASE):
 
     def __init__(self, unit_id, **kwargs):
         self.unit_id = unit_id
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(AdminUnit, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<AdminUnit %s>' % self.unit_id

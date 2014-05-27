@@ -38,10 +38,7 @@ class User(BASE):
 
     def __init__(self, userid, **kwargs):
         self.userid = userid
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(User, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<User %s>' % self.userid

@@ -29,11 +29,7 @@ class Group(BASE):
 
     def __init__(self, groupid, **kwargs):
         self.groupid = groupid
-
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(Group, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<Group %s>' % self.groupid

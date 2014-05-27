@@ -35,10 +35,7 @@ class Client(BASE):
 
     def __init__(self, client_id, **kwargs):
         self.client_id = client_id
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(Client, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<Client %s>' % self.client_id
