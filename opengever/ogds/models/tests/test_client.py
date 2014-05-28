@@ -1,7 +1,7 @@
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.group import Group
-from opengever.ogds.models.user import User
 from opengever.ogds.models.testing import DATABASE_LAYER
+from opengever.ogds.models.user import User
 import unittest2
 
 
@@ -57,42 +57,32 @@ class TestClientGroups(unittest2.TestCase):
         return self.layer.session
 
     def setUp(self):
-        client = Client('client')
-        inbox = Group('inbox')
-        members = Group('members')
-        john = User('john.doe')
-        hugo = User('hugo.boss')
+        super(TestClientGroups, self).setUp()
 
-        # john and hugo are members
-        members.users.append(john)
-        members.users.append(hugo)
+        self.john = User('john')
+        self.hugo = User('hugo')
+        self.james = User('james')
+        self.session.add(self.john)
+        self.session.add(self.hugo)
+        self.session.add(self.james)
 
-        # only john is inbox user
-        inbox.users.append(john)
+        inbox = Group('inbox', users=[self.john])
+        members = Group('members', users=[self.john, self.hugo])
+        self.session.add(inbox)
+        self.session.add(members)
 
-        # set the groups on the client
-        client.inbox_group = inbox
-        client.users_group = members
-
-        self.session.add(client)
-        self.layer.commit()
-
-    def _get_user(self, userid):
-        return self.session.query(User).filter_by(userid=userid).one()
-
-    def _get_client(self):
-        return self.session.query(Client).filter_by(client_id='client').one()
+        self.client = Client('client', users_group=members, inbox_group=inbox)
+        self.session.add(self.client)
 
     def test_users_in_members_group(self):
-        self.assertIn(self._get_user('john.doe'),
-                      self._get_client().users_group.users)
 
-        self.assertIn(self._get_user('hugo.boss'),
-                      self._get_client().users_group.users)
+        self.assertEquals([self.john, self.hugo],
+                          self.client.users_group.users)
 
-    def test_only_john_in_inbox_group(self):
-        self.assertIn(self._get_user('john.doe'),
-                      self._get_client().inbox_group.users)
+    def test_users_in_inbox_group(self):
+        self.assertEquals([self.john],
+                          self.client.inbox_group.users)
 
-        self.assertNotIn(self._get_user('hugo.boss'),
-                         self._get_client().inbox_group.users)
+    def test_assigned_users_returns_all_users_from_the_usersgroup(self):
+        self.assertEquals([self.john, self.hugo],
+                          self.client.assigned_users())

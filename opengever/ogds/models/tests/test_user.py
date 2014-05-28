@@ -30,6 +30,25 @@ class TestUserModel(unittest2.TestCase):
         self.assertEquals(str(User('a-user')),
                           '<User a-user>')
 
+    def test_fullname_is_first_and_lastname(self):
+        billy = User("billyj", firstname="billy", lastname="johnson")
+        self.assertEquals('johnson billy', billy.fullname())
+
+    def test_fullname_is_only_first_or_lastname_if_other_is_missing(self):
+        billy = User("billyj", firstname="billy")
+        self.assertEquals('billy', billy.fullname())
+
+        johnson = User("billyj", lastname="johnson")
+        self.assertEquals('johnson', johnson.fullname())
+
+    def test_fullname_is_userid_if_no_name_given(self):
+        billyj = User("billyj")
+        self.assertEquals('billyj', billyj.fullname())
+
+    def test_label_is_the_fullname_with_userid_in_braces(self):
+        sammy = User("sammy", firstname="Samuel", lastname="Jackson")
+        self.assertEquals("Jackson Samuel (sammy)", sammy.label())
+
     def test_create_sets_attrs(self):
         attrs = {
             'userid': 'hugo.boss',

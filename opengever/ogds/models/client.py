@@ -31,12 +31,14 @@ class Client(BASE):
         backref='inbox_group',
         primaryjoin=inbox_group_id == Group.groupid)
 
+    admin_unit_id = Column(String(30), ForeignKey('admin_units.unit_id'))
+
     def __init__(self, client_id, **kwargs):
         self.client_id = client_id
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(Client, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<Client %s>' % self.client_id
+
+    def assigned_users(self):
+        return self.users_group.users
