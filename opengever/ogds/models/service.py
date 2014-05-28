@@ -25,13 +25,13 @@ class OGDSService(object):
         """returns a User by it's userid. None is returned when no user is found.
            See #find_user for similar behavior.
         """
-        return self.session.query(User).get(userid)
+        return self._query_user().get(userid)
 
     def all_users(self):
-        return self.session.query(User).all()
+        return self._query_user().all()
 
     def inactive_users(self):
-        return self.session.query(User).filter_by(active=False).all()
+        return self._query_user().filter_by(active=False).all()
 
     def fetch_client(self, client_id):
         """returns a Client by it's client_id. None is returned when no client
@@ -83,3 +83,6 @@ class OGDSService(object):
 
     def _query_client(self):
         return self.session.query(Client).order_by(Client.title)
+
+    def _query_user(self):
+        return self.session.query(User)
