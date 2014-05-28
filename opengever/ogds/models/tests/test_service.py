@@ -98,6 +98,14 @@ class TestServiceClientMethods(unittest2.TestCase):
         self.session.add(self.client_b)
         self.session.add(self.client_c)
 
+    def test_has_multiple_admin_units(self):
+        self.assertTrue(self.service.has_multiple_admin_units())
+
+    def test_has_multiple_admin_units_counts_only_enabled_admin_units(self):
+        self.admin_unit_1.enabled = False
+        self.admin_unit_2.enabled = False
+        self.assertFalse(self.service.has_multiple_admin_units())
+
     def test_fetch_client_by_client_id(self):
         self.assertEquals(self.client_c,
                           self.service.fetch_client('clientc'))
@@ -172,3 +180,4 @@ class TestServiceClientMethods(unittest2.TestCase):
         self.assertEquals(
             [self.admin_unit_1, self.admin_unit_2, self.admin_unit_3],
             self.service.all_admin_units(enabled_only=False))
+
