@@ -37,18 +37,19 @@ class OGDSService(object):
         """returns a Client by it's client_id. None is returned when no client
         is found. """
 
-        return self.session.query(Client).get(client_id)
+        return self._query_client().get(client_id)
 
     def all_clients(self, enabled_only=True):
-        query = self.session.query(Client)
+        query = self._query_client()
         if enabled_only:
             query = query.filter_by(enabled=True)
 
         return query.all()
 
     def assigned_clients(self, userid):
-        return self.session.query(Client).join(Client.users_group).join(
-            Group.users).filter(User.userid == userid).all()
+        query = self._query_client().join(Client.users_group)
+        query = query.join(Group.users).filter(User.userid == userid)
+        return query.all()
 
     def fetch_org_unit(self, unit_id):
         client = self.fetch_client(unit_id)
@@ -79,3 +80,6 @@ class OGDSService(object):
         if enabled_only:
             query = query.filter_by(enabled=enabled_only)
         return query
+
+    def _query_client(self):
+        return self.session.query(Client).order_by(Client.title)

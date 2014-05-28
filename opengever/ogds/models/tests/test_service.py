@@ -88,12 +88,12 @@ class TestServiceClientMethods(unittest2.TestCase):
         self.session.add(self.admin_unit_2)
         self.session.add(self.admin_unit_3)
 
+        self.client_c = Client('clientc', title="Client C",
+                               users_group=group_a, admin_unit_id="unit_1")
         self.client_a = Client('clienta', title="Client A",
                                users_group=group_a, admin_unit_id="unit_1")
         self.client_b = Client('clientb', title="Client B",
                                admin_unit_id="unit_2", enabled=False)
-        self.client_c = Client('clientc', title="Client C",
-                               users_group=group_a, admin_unit_id="unit_1")
         self.session.add(self.client_a)
         self.session.add(self.client_b)
         self.session.add(self.client_c)
@@ -154,7 +154,7 @@ class TestServiceClientMethods(unittest2.TestCase):
 
     def test_all_clients_includes_disabled_clients_when_disable_enabled_flag(self):
         self.assertEquals(
-            [self.client_a, self.client_c, self.client_b],
+            [self.client_a, self.client_b, self.client_c],
             self.service.all_clients(enabled_only=False))
 
     def test_all_org_units_returns_list_all_enabled_clients_wrapped_as_orgunits(self):
@@ -168,7 +168,7 @@ class TestServiceClientMethods(unittest2.TestCase):
         units = self.service.all_org_units(enabled_only=False)
 
         self.assertEquals(
-            ['<OrgUnit clienta>', '<OrgUnit clientc>', '<OrgUnit clientb>'],
+            ['<OrgUnit clienta>', '<OrgUnit clientb>', '<OrgUnit clientc>'],
             [u.__repr__() for u in units])
 
     def test_all_admin_units_returns_a_list_of_all_enabled_admin_units(self):
@@ -180,4 +180,3 @@ class TestServiceClientMethods(unittest2.TestCase):
         self.assertEquals(
             [self.admin_unit_1, self.admin_unit_2, self.admin_unit_3],
             self.service.all_admin_units(enabled_only=False))
-
