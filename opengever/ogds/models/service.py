@@ -64,13 +64,7 @@ class OGDSService(object):
         return [OrgUnit(client) for client in self.assigned_clients(userid)]
 
     def fetch_admin_unit(self, unit_id):
-        return self.session.query(AdminUnit).get(unit_id)
-
-    def _query_admin_units(self, enabled_only):
-        query = self.session.query(AdminUnit)
-        if enabled_only:
-            query = query.filter_by(enabled=True)
-        return query
+        return self._query_admin_units(enabled_only=False).get(unit_id)
 
     def all_admin_units(self, enabled_only=True):
         query = self._query_admin_units(enabled_only)
@@ -79,3 +73,9 @@ class OGDSService(object):
     def has_multiple_admin_units(self, enabled_only=True):
         query = self._query_admin_units(enabled_only)
         return query.count() > 1
+
+    def _query_admin_units(self, enabled_only=True):
+        query = self.session.query(AdminUnit)
+        if enabled_only:
+            query = query.filter_by(enabled=enabled_only)
+        return query
