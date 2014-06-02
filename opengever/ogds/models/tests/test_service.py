@@ -61,6 +61,33 @@ class TestOGDSService(unittest2.TestCase):
         self.assertEquals([jane], self.service.inactive_users())
 
 
+class TestOrgUnitCounters(unittest2.TestCase):
+
+    layer = DATABASE_LAYER
+
+    @property
+    def session(self):
+        return self.layer.session
+
+    def setUp(self):
+        super(TestOrgUnitCounters, self).setUp()
+        self.service = OGDSService(self.session)
+
+    def test_has_multiple_org_units(self):
+        self.client_c = Client('clientc', title="Client C")
+        self.client_a = Client('clienta', title="Client A")
+        self.client_b = Client('clientb', title="Client B")
+        self.session.add(self.client_c)
+        self.session.add(self.client_a)
+        self.session.add(self.client_b)
+
+        self.assertTrue(self.service.has_multiple_org_units())
+
+    def test_falsy_multiple_org_units(self):
+        self.client_c = Client('clientc', title="Client C")
+        self.assertFalse(self.service.has_multiple_org_units())
+
+
 class TestServiceClientMethods(unittest2.TestCase):
 
     layer = DATABASE_LAYER
