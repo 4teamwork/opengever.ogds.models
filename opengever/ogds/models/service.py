@@ -75,6 +75,9 @@ class OGDSService(object):
         query = self._query_admin_units(enabled_only)
         return query.count() > 1
 
+    def has_multiple_org_units(self):
+        return self._query_client().count() > 1
+
     def _query_admin_units(self, enabled_only=True):
         query = self.session.query(AdminUnit)
         if enabled_only:
