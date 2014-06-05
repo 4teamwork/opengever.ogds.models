@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.3 (unreleased)
+1.0.3 (2014-06-05)
 ------------------
 
 - Fixed backref name of the groups_user join table.
