@@ -1,4 +1,3 @@
-from sqlalchemy.ext.declarative import declarative_base
+from opengever.ogds.models.declarative import query_base
 
-
-BASE = declarative_base()
+BASE = query_base()
