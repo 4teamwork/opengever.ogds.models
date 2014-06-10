@@ -36,7 +36,7 @@ class DatabaseLayer(Layer):
         if not self._session:
             self._session = scoped_session(sessionmaker(
                     bind=self.get_connection()))
-
+            BASE.session = self._session
         return self._session
 
     def close_session(self):
