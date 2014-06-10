@@ -72,3 +72,7 @@ class TestAdminUnit(unittest2.TestCase):
     def test_org_unit_setter_updates_client_relations(self):
         self.admin_unit.org_units = [self.org_unit_a]
         self.assertEqual([self.client_a], self.admin_unit.clients)
+
+    def test_assigned_users_return_assigned_users_of_all_orgunits(self):
+        self.assertItemsEqual([self.hugo, self.peter, self.john],
+                              self.admin_unit.assigned_users())

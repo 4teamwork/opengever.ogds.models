@@ -31,10 +31,9 @@ class AdminUnit(BASE):
         return self.title
 
     def assigned_users(self):
-        users = []
+        users = set()
         for org_unit in self.org_units:
-            users += org_unit.assigned_users()
-
+            users.update(org_unit.assigned_users())
         return users
 
     @property
