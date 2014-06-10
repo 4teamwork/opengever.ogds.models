@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models.org_unit import OrgUnit
 from sqlalchemy import Column, String, Boolean
 from sqlalchemy.orm import relationship
 
@@ -14,7 +15,7 @@ class AdminUnit(BASE):
     site_url = Column(String(100))
     public_url = Column(String(100))
 
-    org_units = relationship("Client", backref="admin_unit")
+    clients = relationship("Client", backref="admin_unit")
 
     def __init__(self, unit_id, **kwargs):
         self.unit_id = unit_id
@@ -29,12 +30,17 @@ class AdminUnit(BASE):
     def label(self):
         return self.title
 
-    def public_url(self):
-        return self._client.public_url
-
     def assigned_users(self):
         users = []
         for org_unit in self.org_units:
             users += org_unit.assigned_users()
 
         return users
+
+    @property
+    def org_units(self):
+        return [OrgUnit(client) for client in self.clients]
+
+    @org_units.setter
+    def org_units(self, units):
+        self.clients = [unit._client for unit in units]
