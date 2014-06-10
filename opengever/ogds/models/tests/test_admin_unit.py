@@ -19,25 +19,36 @@ class TestAdminUnit(unittest2.TestCase):
         super(TestAdminUnit, self).setUp()
         self.john = User('john')
         self.hugo = User('hugo')
+        self.peter = User('peter')
         self.session.add(self.john)
         self.session.add(self.hugo)
+        self.session.add(self.peter)
 
-        self.admin_unit = AdminUnit('canton', title='Canton Unit',
-                                    ip_address="127.8.9.78")
+        members_a = Group('members', users=[self.john, self.hugo])
+        self.session.add(members_a)
 
-        self.session.add(self.admin_unit)
+        members_b = Group('members', users=[self.peter, self.hugo])
+        self.session.add(members_b)
 
-        members = Group('members', users=[self.john, self.hugo])
-        self.session.add(members)
-
-        client_a = Client('clienta',
+        self.client_a = Client('clienta',
                           title='Client A',
                           public_url='http://localhost',
-                          users_group=members,
+                          users_group=members_a,
                           admin_unit_id='canton')
+        self.session.add(self.client_a)
+        self.org_unit_a = OrgUnit(self.client_a)
 
-        self.session.add(client_a)
-        self.org_unit = OrgUnit(client_a)
+        self.client_b = Client('clientb',
+                          title='Client B',
+                          public_url='http://localhost',
+                          users_group=members_b,
+                          admin_unit_id='canton')
+        self.session.add(self.client_b)
+
+        self.admin_unit = AdminUnit('canton', title='Canton Unit',
+                                    ip_address="127.8.9.78",
+                                    clients=[self.client_a, self.client_b])
+        self.session.add(self.admin_unit)
 
     def test_representation_returns_OrgUnit_and_id(self):
         self.assertEquals(
@@ -53,3 +64,15 @@ class TestAdminUnit(unittest2.TestCase):
         self.assertEquals(
             'canton',
             self.admin_unit.id())
+
+    def test_org_units_getter_returns_client_wrapped_as_orgunits(self):
+        self.assertEqual(['<OrgUnit clienta>', '<OrgUnit clientb>'],
+                         [unit.__repr__() for unit in self.admin_unit.org_units])
+
+    def test_org_unit_setter_updates_client_relations(self):
+        self.admin_unit.org_units = [self.org_unit_a]
+        self.assertEqual([self.client_a], self.admin_unit.clients)
+
+    def test_assigned_users_return_assigned_users_of_all_orgunits(self):
+        self.assertItemsEqual([self.hugo, self.peter, self.john],
+                              self.admin_unit.assigned_users())
