@@ -55,3 +55,9 @@ class TestOrgUnit(unittest2.TestCase):
     def test_assigned_users_returns_all_users_from_the_clients_usersgroup(self):
         self.assertEquals(
             [self.john, self.hugo], self.org_unit.assigned_users())
+
+    def test_inbox_returns_inbox_according_to_the_org_unit(self):
+        inbox = self.org_unit.inbox()
+
+        self.assertEquals('inbox:clienta', inbox.id())
+        self.assertEquals(self.org_unit, inbox._org_unit)

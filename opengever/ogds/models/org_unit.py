@@ -1,3 +1,6 @@
+from opengever.ogds.models.inbox import Inbox
+
+
 class OrgUnit(object):
 
     def __init__(self, client):
@@ -15,8 +18,14 @@ class OrgUnit(object):
     def public_url(self):
         return self._client.public_url
 
+    def inbox_group(self):
+        return self._client.inbox_group
+
     def assigned_users(self):
         return self._client.assigned_users()
 
     def assign_to_admin_unit(self, admin_unit):
         admin_unit.org_units.append(self._client)
+
+    def inbox(self):
+        return Inbox(self)
