@@ -2,6 +2,7 @@ from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.exceptions import RecordNotFound
 from opengever.ogds.models.group import Group
+from opengever.ogds.models.org_unit import LoneOrgUnit
 from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.user import User
 
@@ -52,17 +53,23 @@ class OGDSService(object):
         return query.all()
 
     def fetch_org_unit(self, unit_id):
-        client = self.fetch_client(unit_id)
-        if client:
-            return OrgUnit(client)
-        return None
+        return self._wrap_client(self.fetch_client(unit_id))
 
     def all_org_units(self, enabled_only=True):
         clients = self.all_clients(enabled_only=enabled_only)
-        return [OrgUnit(client) for client in clients]
+        return [self._wrap_client(client) for client in clients]
 
     def assigned_org_units(self, userid):
-        return [OrgUnit(client) for client in self.assigned_clients(userid)]
+        return [self._wrap_client(client) for client in
+                self.assigned_clients(userid)]
+
+    def _wrap_client(self, client):
+        if not client:
+            return None
+        if self.has_multiple_org_units():
+            return OrgUnit(client)
+        else:
+            return LoneOrgUnit(client)
 
     def fetch_admin_unit(self, unit_id):
         return self._query_admin_units(enabled_only=False).get(unit_id)
