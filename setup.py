@@ -22,7 +22,7 @@ setup(name='opengever.ogds.models',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
 
-      author='%s, 4teamwork GmbH' % maintainer,
+      author='%s, 4teamwork AG' % maintainer,
       author_email='mailto:info@4teamwork.ch',
       url='http://psc.4teamwork.ch/dist/opengever/opengever-ogds-models',
       license='GPL2',
