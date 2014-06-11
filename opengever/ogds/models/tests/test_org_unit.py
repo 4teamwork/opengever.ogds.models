@@ -1,6 +1,7 @@
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.org_unit import OrgUnit
+from opengever.ogds.models.service import OGDSService
 from opengever.ogds.models.testing import DATABASE_LAYER
 from opengever.ogds.models.user import User
 import unittest2
@@ -16,6 +17,9 @@ class TestOrgUnit(unittest2.TestCase):
 
     def setUp(self):
         super(TestOrgUnit, self).setUp()
+
+        self.service = OGDSService(self.session)
+
         self.john = User('john')
         self.hugo = User('hugo')
         self.session.add(self.john)
@@ -61,3 +65,14 @@ class TestOrgUnit(unittest2.TestCase):
 
         self.assertEquals('inbox:clienta', inbox.id())
         self.assertEquals(self.org_unit, inbox._org_unit)
+
+    def test_label_is_not_prefixed_for_lone_org_unit(self):
+        org_unit = self.service.fetch_org_unit('clienta')
+        self.assertEqual(u'a label', org_unit.prefix_label(u'a label'))
+
+    def test_label_is_prefixed_for_multiple_org_unit(self):
+        self.session.add(Client('clientb'))
+
+        org_unit = self.service.fetch_org_unit('clienta')
+        self.assertEqual(u'Client A / a label',
+                         org_unit.prefix_label(u'a label'))

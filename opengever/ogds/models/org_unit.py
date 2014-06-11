@@ -24,8 +24,23 @@ class OrgUnit(object):
     def assigned_users(self):
         return self._client.assigned_users()
 
+    def users_group(self):
+        return self._client.users_group
+
     def assign_to_admin_unit(self, admin_unit):
         admin_unit.org_units.append(self._client)
 
     def inbox(self):
         return Inbox(self)
+
+    def prefix_label(self, label):
+        return u'{0} / {1}'.format(self.label(), label)
+
+
+class LoneOrgUnit(OrgUnit):
+    """Handles special cases when only one OrgUnit is available in the whole
+    system.
+
+    """
+    def prefix_label(self, label):
+        return label
