@@ -26,6 +26,12 @@ class TestOGDSService(unittest2.TestCase):
 
         self.assertEquals(jane, self.service.fetch_user("jane"))
 
+    def test_fetch_group_by_id(self):
+        group = Group('group_a')
+        self.session.add(group)
+
+        self.assertEquals(group, self.service.fetch_group("group_a"))
+
     def test_fetch_user_returns_none_when_no_user_found(self):
         self.assertEquals(None, self.service.fetch_user("jane"))
 
