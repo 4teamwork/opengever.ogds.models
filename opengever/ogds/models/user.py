@@ -43,7 +43,10 @@ class User(BASE):
     def __repr__(self):
         return '<User %s>' % self.userid
 
-    def label(self):
+    def label(self, with_principal=True):
+        if not with_principal:
+            return self.fullname()
+
         return "%s (%s)" % (self.fullname(), self.userid)
 
     def fullname(self):
