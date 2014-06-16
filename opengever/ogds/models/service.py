@@ -85,6 +85,9 @@ class OGDSService(object):
     def has_multiple_org_units(self):
         return self._query_client().count() > 1
 
+    def fetch_group(self, groupid):
+        return self._query_group().get(groupid)
+
     def _query_admin_units(self, enabled_only=True):
         query = self.session.query(AdminUnit)
         if enabled_only:
@@ -96,3 +99,6 @@ class OGDSService(object):
 
     def _query_user(self):
         return self.session.query(User)
+
+    def _query_group(self):
+        return self.session.query(Group)

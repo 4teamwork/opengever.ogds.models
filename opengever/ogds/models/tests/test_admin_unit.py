@@ -76,3 +76,7 @@ class TestAdminUnit(unittest2.TestCase):
     def test_assigned_users_return_assigned_users_of_all_orgunits(self):
         self.assertItemsEqual([self.hugo, self.peter, self.john],
                               self.admin_unit.assigned_users())
+
+    def test_prefix_label(self):
+        self.assertEqual(u'Canton Unit / foo',
+                         self.admin_unit.prefix_label('foo'))

@@ -1,6 +1,8 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models.org_unit import OrgUnit
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
 
@@ -43,3 +45,6 @@ class AdminUnit(BASE):
     @org_units.setter
     def org_units(self, units):
         self.clients = [unit._client for unit in units]
+
+    def prefix_label(self, label):
+        return u'{0} / {1}'.format(self.label(), label)
