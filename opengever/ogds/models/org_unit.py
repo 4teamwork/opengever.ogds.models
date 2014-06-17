@@ -36,6 +36,9 @@ class OrgUnit(object):
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)
 
+    @property
+    def admin_unit(self):
+        return self._client.admin_unit
 
 class LoneOrgUnit(OrgUnit):
     """Handles special cases when only one OrgUnit is available in the whole
