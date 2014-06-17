@@ -9,6 +9,11 @@ class OrgUnit(object):
     def __repr__(self):
         return '<OrgUnit %s>' % self.id()
 
+    def __eq__(self, other):
+        if isinstance(other, OrgUnit):
+            return self.id() == other.id()
+        return False
+
     def id(self):
         return self._client.client_id
 
@@ -39,6 +44,7 @@ class OrgUnit(object):
     @property
     def admin_unit(self):
         return self._client.admin_unit
+
 
 class LoneOrgUnit(OrgUnit):
     """Handles special cases when only one OrgUnit is available in the whole
