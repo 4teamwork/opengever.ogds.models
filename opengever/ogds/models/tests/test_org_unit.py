@@ -45,6 +45,8 @@ class TestOrgUnit(unittest2.TestCase):
     def test_comparison_on_id(self):
         self.assertEqual(OrgUnit(Client('aa')), OrgUnit(Client('aa')))
         self.assertNotEqual(OrgUnit(Client('aa')), OrgUnit(Client('bb')))
+        self.assertNotEqual(OrgUnit(Client('aa')), object())
+        self.assertNotEqual(OrgUnit(Client('aa')), None)
 
     def test_label_returns_client_title(self):
         self.assertEquals(

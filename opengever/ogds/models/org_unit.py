@@ -14,6 +14,9 @@ class OrgUnit(object):
             return self.id() == other.id()
         return False
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def id(self):
         return self._client.client_id
 
