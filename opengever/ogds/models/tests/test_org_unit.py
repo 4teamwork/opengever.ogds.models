@@ -1,3 +1,4 @@
+from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.client import Client
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.org_unit import OrgUnit
@@ -28,18 +29,24 @@ class TestOrgUnit(unittest2.TestCase):
         members = Group('members', users=[self.john, self.hugo])
         self.session.add(members)
 
-        client_a = Client('clienta',
+        self.client_a = Client('clienta',
                           title='Client A',
                           public_url='http://localhost',
                           users_group=members)
 
-        self.session.add(client_a)
-        self.org_unit = OrgUnit(client_a)
+        self.session.add(self.client_a)
+        self.org_unit = OrgUnit(self.client_a)
 
     def test_representation_returns_OrgUnit_and_id(self):
         self.assertEquals(
             '<OrgUnit clienta>',
             self.org_unit.__repr__())
+
+    def test_comparison_on_id(self):
+        self.assertEqual(OrgUnit(Client('aa')), OrgUnit(Client('aa')))
+        self.assertNotEqual(OrgUnit(Client('aa')), OrgUnit(Client('bb')))
+        self.assertNotEqual(OrgUnit(Client('aa')), object())
+        self.assertNotEqual(OrgUnit(Client('aa')), None)
 
     def test_label_returns_client_title(self):
         self.assertEquals(
@@ -76,3 +83,11 @@ class TestOrgUnit(unittest2.TestCase):
         org_unit = self.service.fetch_org_unit('clienta')
         self.assertEqual(u'Client A / a label',
                          org_unit.prefix_label(u'a label'))
+
+    def test_admin_unit_returns_clients_admin_unit(self):
+        admin_unit = AdminUnit('admin_unit_1')
+        self.session.add(admin_unit)
+        self.client_a.admin_unit_id = admin_unit.id()
+        self.session.commit()
+
+        self.assertEqual(admin_unit, self.org_unit.admin_unit)

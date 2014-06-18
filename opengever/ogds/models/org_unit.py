@@ -9,6 +9,14 @@ class OrgUnit(object):
     def __repr__(self):
         return '<OrgUnit %s>' % self.id()
 
+    def __eq__(self, other):
+        if isinstance(other, OrgUnit):
+            return self.id() == other.id()
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def id(self):
         return self._client.client_id
 
@@ -35,6 +43,10 @@ class OrgUnit(object):
 
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)
+
+    @property
+    def admin_unit(self):
+        return self._client.admin_unit
 
 
 class LoneOrgUnit(OrgUnit):
