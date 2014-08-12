@@ -29,10 +29,14 @@ class TestOrgUnit(unittest2.TestCase):
         members = Group('members', users=[self.john, self.hugo])
         self.session.add(members)
 
+        inbox_members = Group('inbox_members', users=[self.john])
+        self.session.add(members)
+
         self.client_a = Client('clienta',
-                          title='Client A',
-                          public_url='http://localhost',
-                          users_group=members)
+                               title='Client A',
+                               public_url='http://localhost',
+                               users_group=members,
+                               inbox_group=inbox_members)
 
         self.session.add(self.client_a)
         self.org_unit = OrgUnit(self.client_a)
@@ -91,3 +95,10 @@ class TestOrgUnit(unittest2.TestCase):
         self.session.commit()
 
         self.assertEqual(admin_unit, self.org_unit.admin_unit)
+
+    def test_has_user_agency_permissions_check_if_user_is_part_of_inbox_group(self):
+        self.assertTrue(
+            self.org_unit.has_user_agency_permissions(self.john))
+
+        self.assertFalse(
+            self.org_unit.has_user_agency_permissions(self.hugo))

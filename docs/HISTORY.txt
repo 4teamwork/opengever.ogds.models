@@ -5,6 +5,9 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
+- OrgUnit: Added agency_permission check.
+  [phgross]
+
 - Fixed backref name of the groups_user join table.
   [phgross]
 

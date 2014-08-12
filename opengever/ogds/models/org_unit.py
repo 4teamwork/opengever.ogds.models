@@ -44,6 +44,11 @@ class OrgUnit(object):
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)
 
+    def has_user_agency_permissions(self, user):
+        """Check if the given users is part of the unit's inbox group.
+        """
+        return user in self.inbox_group().users
+
     @property
     def admin_unit(self):
         return self._client.admin_unit
