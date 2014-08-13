@@ -30,7 +30,7 @@ class AdminUnit(BASE):
         return self.unit_id
 
     def label(self):
-        return self.title
+        return self.title or u''
 
     def assigned_users(self):
         users = set()
