@@ -60,6 +60,10 @@ class TestAdminUnit(unittest2.TestCase):
             'Canton Unit',
             self.admin_unit.label())
 
+    def test_label_returns_emtpy_string_when_title_is_none(self):
+        self.admin_unit.title = None
+        self.assertEquals('', self.admin_unit.label())
+
     def test_id_returns_unit_id(self):
         self.assertEquals(
             'canton',
