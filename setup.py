@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0.3.dev0'
-maintainer = 'Jonas baumann'
+version = '2.0.0.dev0'
+maintainer = '4teamwork AG'
 
 tests_require = [
     'plone.testing',
@@ -22,9 +22,10 @@ setup(name='opengever.ogds.models',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
 
-      author='%s, 4teamwork AG' % maintainer,
+      author=maintainer,
       author_email='mailto:info@4teamwork.ch',
-      url='http://psc.4teamwork.ch/dist/opengever/opengever-ogds-models',
+      maintainer=maintainer,
+      url='https://github.com/4teamwork/opengever.ogds.models',
       license='GPL2',
 
       packages=find_packages(exclude=['ez_setup']),
