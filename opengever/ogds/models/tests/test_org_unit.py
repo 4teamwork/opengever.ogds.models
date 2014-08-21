@@ -1,5 +1,3 @@
-from opengever.ogds.models.admin_unit import AdminUnit
-from opengever.ogds.models.client import Client
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.service import OGDSService
@@ -29,76 +27,126 @@ class TestOrgUnit(unittest2.TestCase):
         members = Group('members', users=[self.john, self.hugo])
         self.session.add(members)
 
-        self.client_a = Client('clienta',
-                          title='Client A',
-                          public_url='http://localhost',
-                          users_group=members)
+        self.org_unit = OrgUnit('unit',
+                                title='Unit A',
+                                users_group=members)
 
-        self.session.add(self.client_a)
-        self.org_unit = OrgUnit(self.client_a)
+        self.session.add(self.org_unit)
+
+    def test_create_org_unit_id_required(self):
+        with self.assertRaises(TypeError):
+            OrgUnit()
+
+    def test_creatable(self):
+        org_units = self.session.query(OrgUnit).all()
+        self.assertEquals(len(org_units), 1)
+
+        unit = org_units[0]
+        self.assertEquals(unit.unit_id, 'unit')
+
+    def test_repr(self):
+        self.assertEquals(str(OrgUnit('a-unit')),
+                          '<OrgUnit a-unit>')
+
+    def test_create_sets_attrs(self):
+        attrs = {
+            'unit_id': 'unit-two',
+            'title': 'Unit two',
+            'enabled': False,
+            }
+
+        c2 = OrgUnit(**attrs)
+
+        for key, value in attrs.items():
+            self.assertEquals(getattr(c2, key), value)
 
     def test_representation_returns_OrgUnit_and_id(self):
-        self.assertEquals(
-            '<OrgUnit clienta>',
-            self.org_unit.__repr__())
+        self.assertEquals('<OrgUnit unit>', repr(self.org_unit))
 
     def test_comparison_on_id(self):
-        self.assertEqual(OrgUnit(Client('aa')), OrgUnit(Client('aa')))
-        self.assertNotEqual(OrgUnit(Client('aa')), OrgUnit(Client('bb')))
-        self.assertNotEqual(OrgUnit(Client('aa')), object())
-        self.assertNotEqual(OrgUnit(Client('aa')), None)
+        self.assertEqual(OrgUnit('aa'), OrgUnit('aa'))
+        self.assertNotEqual(OrgUnit('aa'), OrgUnit('bb'))
+        self.assertNotEqual(OrgUnit('aa'), object())
+        self.assertNotEqual(OrgUnit('aa'), None)
 
-    def test_label_returns_client_title(self):
+    def test_label_returns_unit_title(self):
         self.assertEquals(
-            'Client A',
+            'Unit A',
             self.org_unit.label())
 
-    def test_id_returns_client_id(self):
+    def test_id_returns_unit_id(self):
         self.assertEquals(
-            'clienta',
+            'unit',
             self.org_unit.id())
 
-    def test_public_url_returns_clients_public_url(self):
-        self.assertEquals(
-            'http://localhost',
-            self.org_unit.public_url())
-
-    def test_assigned_users_returns_all_users_from_the_clients_usersgroup(self):
+    def test_assigned_users_returns_all_users_from_the_units_usersgroup(self):
         self.assertEquals(
             [self.john, self.hugo], self.org_unit.assigned_users())
 
     def test_inbox_returns_inbox_according_to_the_org_unit(self):
         inbox = self.org_unit.inbox()
 
-        self.assertEquals('inbox:clienta', inbox.id())
+        self.assertEquals('inbox:unit', inbox.id())
         self.assertEquals(self.org_unit, inbox._org_unit)
 
     def test_label_is_not_prefixed_for_lone_org_unit(self):
-        org_unit = self.service.fetch_org_unit('clienta')
+        org_unit = self.service.fetch_org_unit('unit')
         self.assertEqual(u'a label', org_unit.prefix_label(u'a label'))
 
     def test_label_is_prefixed_for_multiple_org_unit(self):
-        self.session.add(Client('clientb'))
+        self.session.add(OrgUnit('unit-two'))
 
-        org_unit = self.service.fetch_org_unit('clienta')
-        self.assertEqual(u'Client A / a label',
+        org_unit = self.service.fetch_org_unit('unit')
+        self.assertEqual(u'Unit A / a label',
                          org_unit.prefix_label(u'a label'))
 
-    def test_admin_unit_returns_clients_admin_unit(self):
-        admin_unit = AdminUnit('admin_unit_1')
-        self.session.add(admin_unit)
-        self.client_a.admin_unit_id = admin_unit.id()
-        self.session.commit()
-
-        self.assertEqual(admin_unit, self.org_unit.admin_unit)
-
     def test_inboxgroup_agency_is_inactive_for_lone_org_unit(self):
-        org_unit = self.service.fetch_org_unit('clienta')
+        org_unit = self.service.fetch_org_unit('unit')
 
         self.assertFalse(org_unit.is_inboxgroup_agency_active)
 
     def test_inboxgroup_agency_is_active_for_multiple_org_units(self):
-        self.session.add(Client('clientb'))
+        self.session.add(OrgUnit('unitb'))
 
-        org_unit = self.service.fetch_org_unit('clienta')
+        org_unit = self.service.fetch_org_unit('unit')
         self.assertTrue(org_unit.is_inboxgroup_agency_active)
+
+
+class TestUnitGroups(unittest2.TestCase):
+
+    layer = DATABASE_LAYER
+
+    @property
+    def session(self):
+        return self.layer.session
+
+    def setUp(self):
+        super(TestUnitGroups, self).setUp()
+
+        self.john = User('john')
+        self.hugo = User('hugo')
+        self.james = User('james')
+        self.session.add(self.john)
+        self.session.add(self.hugo)
+        self.session.add(self.james)
+
+        inbox = Group('inbox', users=[self.john])
+        members = Group('members', users=[self.john, self.hugo])
+        self.session.add(inbox)
+        self.session.add(members)
+
+        self.unit = OrgUnit('unit', users_group=members, inbox_group=inbox)
+        self.session.add(self.unit)
+
+    def test_users_in_members_group(self):
+
+        self.assertEquals([self.john, self.hugo],
+                          self.unit.users_group.users)
+
+    def test_users_in_inbox_group(self):
+        self.assertEquals([self.john],
+                          self.unit.inbox_group.users)
+
+    def test_assigned_users_returns_all_users_from_the_usersgroup(self):
+        self.assertEquals([self.john, self.hugo],
+                          self.unit.assigned_users())

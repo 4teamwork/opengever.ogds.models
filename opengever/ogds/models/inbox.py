@@ -10,4 +10,4 @@ class Inbox(object):
         return '<Inbox %s>' % self.id()
 
     def assigned_users(self):
-        return self._org_unit.inbox_group().users
+        return self._org_unit.inbox_group.users
