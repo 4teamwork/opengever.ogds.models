@@ -91,3 +91,14 @@ class TestOrgUnit(unittest2.TestCase):
         self.session.commit()
 
         self.assertEqual(admin_unit, self.org_unit.admin_unit)
+
+    def test_inboxgroup_agency_is_inactive_for_lone_org_unit(self):
+        org_unit = self.service.fetch_org_unit('clienta')
+
+        self.assertFalse(org_unit.is_inboxgroup_agency_active)
+
+    def test_inboxgroup_agency_is_active_for_multiple_org_units(self):
+        self.session.add(Client('clientb'))
+
+        org_unit = self.service.fetch_org_unit('clienta')
+        self.assertTrue(org_unit.is_inboxgroup_agency_active)
