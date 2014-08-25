@@ -48,11 +48,22 @@ class OrgUnit(object):
     def admin_unit(self):
         return self._client.admin_unit
 
+    @property
+    def is_inboxgroup_agency_active(self):
+        """The inbox group acengy is only activated in a multi-orgunit
+        setup."""
+
+        return True
+
 
 class LoneOrgUnit(OrgUnit):
     """Handles special cases when only one OrgUnit is available in the whole
     system.
-
     """
+
     def prefix_label(self, label):
         return label
+
+    @property
+    def is_inboxgroup_agency_active(self):
+        return False
