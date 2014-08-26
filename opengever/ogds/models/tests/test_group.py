@@ -16,6 +16,14 @@ class TestGroupModel(unittest2.TestCase):
         with self.assertRaises(TypeError):
             Group()
 
+    def test_equality(self):
+        self.assertEqual(Group('aa'), Group('aa'))
+        self.assertNotEqual(Group('aa'), Group('bb'))
+        self.assertNotEqual(Group('aa'), Group(123))
+        self.assertNotEqual(Group('aa'), Group(None))
+        self.assertNotEqual(Group('aa'), object())
+        self.assertNotEqual(Group('aa'), None)
+
     def test_creatable(self):
         g1 = Group('group-one')
         self.session.add(g1)

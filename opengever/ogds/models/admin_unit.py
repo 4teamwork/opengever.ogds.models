@@ -25,6 +25,17 @@ class AdminUnit(BASE):
     def __repr__(self):
         return '<AdminUnit %s>' % self.unit_id
 
+    def __eq__(self, other):
+        if isinstance(other, AdminUnit):
+            return self.id() == other.id()
+        return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+
     def id(self):
         return self.unit_id
 

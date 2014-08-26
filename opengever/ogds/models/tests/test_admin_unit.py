@@ -49,6 +49,14 @@ class TestAdminUnit(unittest2.TestCase):
                                     ])
         self.session.add(self.admin_unit)
 
+    def test_equality(self):
+        self.assertEqual(AdminUnit('aa'), AdminUnit('aa'))
+        self.assertNotEqual(AdminUnit('aa'), AdminUnit('bb'))
+        self.assertNotEqual(AdminUnit('aa'), AdminUnit(123))
+        self.assertNotEqual(AdminUnit('aa'), AdminUnit(None))
+        self.assertNotEqual(AdminUnit('aa'), object())
+        self.assertNotEqual(AdminUnit('aa'), None)
+
     def test_representation_returns_OrgUnit_and_id(self):
         self.assertEquals('<AdminUnit canton>', repr(self.admin_unit))
 

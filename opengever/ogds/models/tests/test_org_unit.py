@@ -63,9 +63,11 @@ class TestOrgUnit(unittest2.TestCase):
     def test_representation_returns_OrgUnit_and_id(self):
         self.assertEquals('<OrgUnit unit>', repr(self.org_unit))
 
-    def test_comparison_on_id(self):
+    def test_equality(self):
         self.assertEqual(OrgUnit('aa'), OrgUnit('aa'))
         self.assertNotEqual(OrgUnit('aa'), OrgUnit('bb'))
+        self.assertNotEqual(OrgUnit('aa'), OrgUnit(123))
+        self.assertNotEqual(OrgUnit('aa'), OrgUnit(None))
         self.assertNotEqual(OrgUnit('aa'), object())
         self.assertNotEqual(OrgUnit('aa'), None)
 

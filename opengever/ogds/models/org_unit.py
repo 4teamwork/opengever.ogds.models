@@ -61,10 +61,13 @@ class OrgUnit(BASE):
     def __eq__(self, other):
         if isinstance(other, OrgUnit):
             return self.id() == other.id()
-        return False
+        return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
 
     @property
     def _strategy(self):
