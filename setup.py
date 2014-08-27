@@ -5,7 +5,9 @@ version = '2.0.0.dev0'
 maintainer = '4teamwork AG'
 
 tests_require = [
+    'ftw.builder',
     'plone.testing',
+    'plone.app.testing',
     'unittest2',
     ]
 

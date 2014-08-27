@@ -1,15 +1,32 @@
+from ftw.builder import session
+from ftw.builder.testing import BUILDER_LAYER
 from opengever.ogds.models import BASE
+from opengever.ogds.models.tests import builders  # keep!
 from plone.testing import Layer
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 class DatabaseLayer(Layer):
+
+    defaultBases = (BUILDER_LAYER,)
 
     def __init__(self, *args, **kwargs):
         Layer.__init__(self, *args, **kwargs)
         self._engine = None
         self._session = None
+        self.auto_commit = False
+
+    def __call__(self):
+        return self
+
+    def setUp(self):
+        self.old_factory = session.factory
+        session.factory = self
+
+    def tearDown(self):
+        session.factory = self.old_factory
 
     def testSetUp(self):
         self.disconnect()
@@ -50,7 +67,6 @@ class DatabaseLayer(Layer):
 
     def commit(self):
         self.session.commit()
-        self.close_session()
 
 
 DATABASE_LAYER = DatabaseLayer()

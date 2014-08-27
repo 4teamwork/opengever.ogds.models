@@ -1,53 +1,43 @@
+from ftw.builder import Builder
+from ftw.builder import create
 from opengever.ogds.models.admin_unit import AdminUnit
-from opengever.ogds.models.group import Group
-from opengever.ogds.models.org_unit import OrgUnit
-from opengever.ogds.models.testing import DATABASE_LAYER
-from opengever.ogds.models.user import User
-import unittest2
+from opengever.ogds.models.tests.base import OGDSTestCase
 
 
-class TestAdminUnit(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestAdminUnit(OGDSTestCase):
 
     def setUp(self):
         super(TestAdminUnit, self).setUp()
-        self.john = User('john')
-        self.hugo = User('hugo')
-        self.peter = User('peter')
-        self.session.add(self.john)
-        self.session.add(self.hugo)
-        self.session.add(self.peter)
+        self.john = create(Builder('ogds_user').id('john'))
+        self.hugo = create(Builder('ogds_user').id('hugo'))
+        self.peter = create(Builder('ogds_user').id('peter'))
 
-        members_a = Group('members', users=[self.john, self.hugo])
-        self.session.add(members_a)
+        self.members_a = create(Builder('ogds_group')
+                                .id('members_a')
+                                .having(users=[self.john, self.hugo]))
 
-        members_b = Group('members', users=[self.peter, self.hugo])
-        self.session.add(members_b)
+        self.members_b = create(Builder('ogds_group')
+                                .id('members_b')
+                                .having(users=[self.peter, self.hugo]))
 
-        self.org_unit_a = OrgUnit('unita',
-                                  title='Unit A',
-                                  users_group=members_a,
-                                  admin_unit_id='canton')
-        self.session.add(self.org_unit_a)
+        self.org_unit_a = create(Builder('org_unit')
+                                 .id('unita')
+                                 .having(title='Unit A',
+                                         users_group=self.members_a,
+                                         admin_unit_id='canton'))
 
-        self.org_unit_b = OrgUnit('unitb',
-                                  title='Unit B',
-                                  users_group=members_b,
-                                  admin_unit_id='canton')
-        self.session.add(self.org_unit_b)
+        self.org_unit_b = create(Builder('org_unit')
+                                 .id('unitb')
+                                 .having(title='Unit B',
+                                         users_group=self.members_b,
+                                         admin_unit_id='canton'))
 
-        self.admin_unit = AdminUnit('canton', title='Canton Unit',
-                                    ip_address="127.8.9.78",
-                                    org_units=[
-                                        self.org_unit_a,
-                                        self.org_unit_b
-                                    ])
-        self.session.add(self.admin_unit)
+        self.admin_unit = create(Builder('admin_unit')
+                                 .id('canton')
+                                 .having(title='Canton Unit')
+                                 .assign_org_units([self.org_unit_a,
+                                                   self.org_unit_b]))
+        self.commit()
 
     def test_equality(self):
         self.assertEqual(AdminUnit('aa'), AdminUnit('aa'))
