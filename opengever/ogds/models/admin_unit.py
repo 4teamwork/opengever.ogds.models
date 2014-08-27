@@ -1,5 +1,4 @@
 from opengever.ogds.models import BASE
-from opengever.ogds.models.org_unit import OrgUnit
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
@@ -17,7 +16,7 @@ class AdminUnit(BASE):
     site_url = Column(String(100))
     public_url = Column(String(100))
 
-    clients = relationship("Client", backref="admin_unit")
+    org_units = relationship("OrgUnit", backref="admin_unit")
 
     def __init__(self, unit_id, **kwargs):
         self.unit_id = unit_id
@@ -25,6 +24,17 @@ class AdminUnit(BASE):
 
     def __repr__(self):
         return '<AdminUnit %s>' % self.unit_id
+
+    def __eq__(self, other):
+        if isinstance(other, AdminUnit):
+            return self.id() == other.id()
+        return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
 
     def id(self):
         return self.unit_id
@@ -37,14 +47,6 @@ class AdminUnit(BASE):
         for org_unit in self.org_units:
             users.update(org_unit.assigned_users())
         return users
-
-    @property
-    def org_units(self):
-        return [OrgUnit(client) for client in self.clients]
-
-    @org_units.setter
-    def org_units(self, units):
-        self.clients = [unit._client for unit in units]
 
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)

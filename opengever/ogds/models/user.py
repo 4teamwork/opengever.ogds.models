@@ -43,6 +43,17 @@ class User(BASE):
     def __repr__(self):
         return '<User %s>' % self.userid
 
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self.userid == other.userid
+        return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+
     def label(self, with_principal=True):
         if not with_principal:
             return self.fullname()

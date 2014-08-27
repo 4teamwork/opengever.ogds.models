@@ -1,10 +1,59 @@
+from opengever.ogds.models import BASE
+from opengever.ogds.models.group import Group
 from opengever.ogds.models.inbox import Inbox
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
 
-class OrgUnit(object):
+class MultipleOrgUnitsStrategy(object):
 
-    def __init__(self, client):
-        self._client = client
+    def prefix_label(self, org_unit, label):
+        return u'{0} / {1}'.format(org_unit.label(), label)
+
+    @property
+    def is_inboxgroup_agency_active(self):
+        return True
+
+
+class LoneOrgUnitStrategy(object):
+
+    def prefix_label(self, org_unit, label):
+        return label
+
+    @property
+    def is_inboxgroup_agency_active(self):
+        return False
+
+
+class OrgUnit(BASE):
+    __tablename__ = 'org_units'
+
+    unit_id = Column(String(30), primary_key=True)
+    title = Column(String(30))
+    enabled = Column(Boolean(), default=True)
+
+    # formerly 'group'
+    users_group_id = Column(String(30), ForeignKey('groups.groupid'))
+    users_group = relationship(
+        "Group",
+        backref='org_unit_group',
+        primaryjoin=users_group_id == Group.groupid)
+
+    inbox_group_id = Column(String(30), ForeignKey('groups.groupid'))
+    inbox_group = relationship(
+        "Group",
+        backref='inbox_group',
+        primaryjoin=inbox_group_id == Group.groupid)
+
+    admin_unit_id = Column(String(30), ForeignKey('admin_units.unit_id'))
+
+    def __init__(self, unit_id, **kwargs):
+        self.unit_id = unit_id
+        self._chosen_strategy = None
+        super(OrgUnit, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<OrgUnit %s>' % self.id()
@@ -12,58 +61,42 @@ class OrgUnit(object):
     def __eq__(self, other):
         if isinstance(other, OrgUnit):
             return self.id() == other.id()
-        return False
+        return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
 
-    def id(self):
-        return self._client.client_id
-
-    def label(self):
-        return self._client.title
-
-    def public_url(self):
-        return self._client.public_url
-
-    def inbox_group(self):
-        return self._client.inbox_group
+    @property
+    def _strategy(self):
+        if not hasattr(self, '_chosen_strategy') or \
+                self._chosen_strategy is None:
+            if self.query.count() > 1:
+                self._chosen_strategy = MultipleOrgUnitsStrategy()
+            else:
+                self._chosen_strategy = LoneOrgUnitStrategy()
+        return self._chosen_strategy
 
     def assigned_users(self):
-        return self._client.assigned_users()
+        return self.users_group.users if self.users_group else []
 
-    def users_group(self):
-        return self._client.users_group
+    def id(self):
+        return self.unit_id
+
+    def label(self):
+        return self.title
 
     def assign_to_admin_unit(self, admin_unit):
-        admin_unit.org_units.append(self._client)
+        self.admin_unit = admin_unit
 
     def inbox(self):
         return Inbox(self)
 
     def prefix_label(self, label):
-        return u'{0} / {1}'.format(self.label(), label)
-
-    @property
-    def admin_unit(self):
-        return self._client.admin_unit
+        return self._strategy.prefix_label(self, label)
 
     @property
     def is_inboxgroup_agency_active(self):
-        """The inbox group acengy is only activated in a multi-orgunit
-        setup."""
-
-        return True
-
-
-class LoneOrgUnit(OrgUnit):
-    """Handles special cases when only one OrgUnit is available in the whole
-    system.
-    """
-
-    def prefix_label(self, label):
-        return label
-
-    @property
-    def is_inboxgroup_agency_active(self):
-        return False
+        return self._strategy.is_inboxgroup_agency_active

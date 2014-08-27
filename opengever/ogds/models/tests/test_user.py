@@ -15,6 +15,14 @@ class TestUserModel(unittest2.TestCase):
         with self.assertRaises(TypeError):
             User()
 
+    def test_equality(self):
+        self.assertEqual(User('aa'), User('aa'))
+        self.assertNotEqual(User('aa'), User('bb'))
+        self.assertNotEqual(User('aa'), User(123))
+        self.assertNotEqual(User('aa'), User(None))
+        self.assertNotEqual(User('aa'), object())
+        self.assertNotEqual(User('aa'), None)
+
     def test_creatable(self):
         u1 = User('user-one')
         self.session.add(u1)
