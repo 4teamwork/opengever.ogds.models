@@ -1,15 +1,10 @@
+from opengever.ogds.models.tests.base import OGDSTestCase
 from opengever.ogds.models.user import User
-from opengever.ogds.models.testing import DATABASE_LAYER
-import unittest2
+from ftw.builder import Builder
+from ftw.builder import create
 
 
-class TestUserModel(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestUserModel(OGDSTestCase):
 
     def test_create_userid_required(self):
         with self.assertRaises(TypeError):
@@ -24,9 +19,8 @@ class TestUserModel(unittest2.TestCase):
         self.assertNotEqual(User('aa'), None)
 
     def test_creatable(self):
-        u1 = User('user-one')
-        self.session.add(u1)
-        self.layer.commit()
+        create(Builder("ogds_user").id('user-one'))
+        self.commit()
 
         users = self.session.query(User).all()
         self.assertEquals(len(users), 1)

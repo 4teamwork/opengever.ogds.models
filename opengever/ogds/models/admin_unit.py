@@ -12,9 +12,9 @@ class AdminUnit(BASE):
     unit_id = Column(String(30), primary_key=True)
     title = Column(String(30))
     enabled = Column(Boolean(), default=True)
-    ip_address = Column(String(50))
-    site_url = Column(String(100))
-    public_url = Column(String(100))
+    ip_address = Column(String(50), nullable=False)
+    site_url = Column(String(100), nullable=False)
+    public_url = Column(String(100), nullable=False)
 
     org_units = relationship("OrgUnit", backref="admin_unit")
 

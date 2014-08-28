@@ -1,43 +1,29 @@
-from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.exceptions import RecordNotFound
-from opengever.ogds.models.group import Group
-from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.service import OGDSService
-from opengever.ogds.models.testing import DATABASE_LAYER
-from opengever.ogds.models.user import User
-import unittest2
+from opengever.ogds.models.tests.base import OGDSTestCase
+from ftw.builder import Builder
+from ftw.builder import create
 
 
-class TestOGDSService(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestOGDSService(OGDSTestCase):
 
     def setUp(self):
         super(TestOGDSService, self).setUp()
         self.service = OGDSService(self.session)
 
     def test_fetch_user_by_id(self):
-        jane = User("jane")
-        self.session.add(jane)
-
+        jane = create(Builder('ogds_user').id('jane'))
         self.assertEquals(jane, self.service.fetch_user("jane"))
 
     def test_fetch_group_by_id(self):
-        group = Group('group_a')
-        self.session.add(group)
-
+        group = create(Builder('ogds_group').id('group_a'))
         self.assertEquals(group, self.service.fetch_group("group_a"))
 
     def test_fetch_user_returns_none_when_no_user_found(self):
         self.assertEquals(None, self.service.fetch_user("jane"))
 
     def test_find_user_user_by_id(self):
-        jane = User("jane")
-        self.session.add(jane)
+        jane = create(Builder('ogds_user').id('jane'))
         self.assertEquals(jane, self.service.find_user("jane"))
 
     def test_find_user_raise_when_no_user_found(self):
@@ -48,86 +34,84 @@ class TestOGDSService(unittest2.TestCase):
                           str(cm.exception))
 
     def test_all_users_returns_a_list_of_every_user(self):
-        jane = User("jane")
-        self.session.add(jane)
-        peter = User("peter")
-        self.session.add(peter)
+        create(Builder('admin_unit').assign_org_units([
+            create(Builder('org_unit').id('unitc'))
+        ]))
+        jane = create(Builder('ogds_user').id('jane'))
+        peter = create(Builder('ogds_user').id('peter'))
 
-        self.assertEquals([jane, peter], self.service.all_users())
+        self.assertItemsEqual([jane, peter], self.service.all_users())
 
     def test_all_users_returns_empty_list_when_no_user_exists(self):
         self.assertEquals([], self.service.all_users())
 
     def test_inactive_users_filters_by_active_false(self):
-        jane = User("jane", active=False)
-        self.session.add(jane)
-        peter = User("peter", active=True)
-        self.session.add(peter)
+        create(Builder('ogds_user').id('peter').having(active=True))
+        jane = create(Builder('ogds_user').id('jane').having(active=False))
 
-        self.assertEquals([jane], self.service.inactive_users())
+        self.assertItemsEqual([jane], self.service.inactive_users())
 
 
-class TestOrgUnitCounters(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestOrgUnitCounters(OGDSTestCase):
 
     def setUp(self):
         super(TestOrgUnitCounters, self).setUp()
         self.service = OGDSService(self.session)
 
     def test_has_multiple_org_units(self):
-        self.session.add(OrgUnit('unitc', title="Unit C"))
-        self.session.add(OrgUnit('unita', title="Unit A"))
-        self.session.add(OrgUnit('unitb', title="Unit B"))
+        create(Builder('admin_unit').assign_org_units([
+            create(Builder('org_unit').id('unitc')),
+            create(Builder('org_unit').id('unita')),
+            create(Builder('org_unit').id('unitb')),
+            ]))
 
         self.assertTrue(self.service.has_multiple_org_units())
 
     def test_falsy_multiple_org_units(self):
-        self.session.add(OrgUnit('unitc', title="Unit C"))
+        create(Builder('admin_unit').assign_org_units([
+            create(Builder('org_unit').id('unitc'))
+        ]))
 
         self.assertFalse(self.service.has_multiple_org_units())
 
 
-class TestServiceOrgUnitMethods(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestServiceOrgUnitMethods(OGDSTestCase):
 
     def setUp(self):
         super(TestServiceOrgUnitMethods, self).setUp()
         self.service = OGDSService(self.session)
 
-        hugo_boss = User('hugo.boss')
-        self.session.add(hugo_boss)
+        self.hugo = create(Builder('ogds_user').id('hugo.boss'))
+        self.members = create(Builder('ogds_group')
+                              .id('group_a')
+                              .having(users=[self.hugo]))
 
-        group_a = Group('group_a', users=[hugo_boss])
-        self.session.add(group_a)
+        self.admin_unit_1 = create(Builder('admin_unit').id('admin_1')
+                                   .having(title='Admin Unit 1'))
+        self.admin_unit_2 = create(Builder('admin_unit').id('admin_2')
+                                   .having(enabled=False,
+                                           title='Admin Unit 2'))
+        self.admin_unit_3 = create(Builder('admin_unit').id('admin_3')
+                                   .having(title='Admin Unit 3'))
 
-        self.admin_unit_1 = AdminUnit('admin_1', title="Admin Unit 1")
-        self.admin_unit_2 = AdminUnit('admin_2', title="Admin Unit 2",
-                                      enabled=False)
-        self.admin_unit_3 = AdminUnit('admin_3', title="Admin Unit 3")
+        self.unit_c = create(Builder('org_unit').id('unitc').having(
+                             title='Unit C',
+                             users_group=self.members,
+                             inbox_group=self.members,
+                             admin_unit=self.admin_unit_1))
+        self.unit_a = create(Builder('org_unit').id('unita').having(
+                             title='Unit A',
+                             users_group=self.members,
+                             inbox_group=self.members,
+                             admin_unit=self.admin_unit_1))
+        self.unit_b = create(Builder('org_unit').id('unitb').having(
+                             title='Unit B',
+                             enabled=False,
+                             users_group=self.members,
+                             inbox_group=self.members,
+                             admin_unit=self.admin_unit_1))
 
-        self.session.add(self.admin_unit_1)
-        self.session.add(self.admin_unit_2)
-        self.session.add(self.admin_unit_3)
-
-        self.unit_c = OrgUnit('unitc', title="Unit C",
-                              users_group=group_a, admin_unit_id="unit_1")
-        self.unit_a = OrgUnit('unita', title="Unit A",
-                              users_group=group_a, admin_unit_id="unit_1")
-        self.unit_b = OrgUnit('unitb', title="Unit B",
-                              admin_unit_id="unit_2", enabled=False)
-        self.session.add(self.unit_c)
-        self.session.add(self.unit_a)
-        self.session.add(self.unit_b)
+        self.commit()
 
     def test_has_multiple_admin_units(self):
         self.assertTrue(self.service.has_multiple_admin_units())

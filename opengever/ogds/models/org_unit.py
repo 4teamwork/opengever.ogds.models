@@ -36,19 +36,25 @@ class OrgUnit(BASE):
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
-    users_group_id = Column(String(30), ForeignKey('groups.groupid'))
+    users_group_id = Column(String(30),
+                            ForeignKey('groups.groupid'),
+                            nullable=False)
     users_group = relationship(
         "Group",
         backref='org_unit_group',
         primaryjoin=users_group_id == Group.groupid)
 
-    inbox_group_id = Column(String(30), ForeignKey('groups.groupid'))
+    inbox_group_id = Column(String(30),
+                            ForeignKey('groups.groupid'),
+                            nullable=False)
     inbox_group = relationship(
         "Group",
         backref='inbox_group',
         primaryjoin=inbox_group_id == Group.groupid)
 
-    admin_unit_id = Column(String(30), ForeignKey('admin_units.unit_id'))
+    admin_unit_id = Column(String(30),
+                           ForeignKey('admin_units.unit_id'),
+                           nullable=False)
 
     def __init__(self, unit_id, **kwargs):
         self.unit_id = unit_id
