@@ -159,6 +159,7 @@ class UserBuilder(SqlObjectBuilder):
         super(UserBuilder, self).__init__(session)
         self.groups = []
         self.arguments['userid'] = 'test'
+        self.arguments['email'] = 'test@example.org'
 
     def in_group(self, group):
         self.groups.append(group)
