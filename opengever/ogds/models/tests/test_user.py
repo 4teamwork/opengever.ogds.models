@@ -1,24 +1,26 @@
+from opengever.ogds.models.tests.base import OGDSTestCase
 from opengever.ogds.models.user import User
-from opengever.ogds.models.testing import DATABASE_LAYER
-import unittest2
+from ftw.builder import Builder
+from ftw.builder import create
 
 
-class TestUserModel(unittest2.TestCase):
-
-    layer = DATABASE_LAYER
-
-    @property
-    def session(self):
-        return self.layer.session
+class TestUserModel(OGDSTestCase):
 
     def test_create_userid_required(self):
         with self.assertRaises(TypeError):
             User()
 
+    def test_equality(self):
+        self.assertEqual(User('aa'), User('aa'))
+        self.assertNotEqual(User('aa'), User('bb'))
+        self.assertNotEqual(User('aa'), User(123))
+        self.assertNotEqual(User('aa'), User(None))
+        self.assertNotEqual(User('aa'), object())
+        self.assertNotEqual(User('aa'), None)
+
     def test_creatable(self):
-        u1 = User('user-one')
-        self.session.add(u1)
-        self.layer.commit()
+        create(Builder("ogds_user").id('user-one'))
+        self.commit()
 
         users = self.session.query(User).all()
         self.assertEquals(len(users), 1)
@@ -29,6 +31,25 @@ class TestUserModel(unittest2.TestCase):
     def test_repr(self):
         self.assertEquals(str(User('a-user')),
                           '<User a-user>')
+
+    def test_fullname_is_first_and_lastname(self):
+        billy = User("billyj", firstname="billy", lastname="johnson")
+        self.assertEquals('johnson billy', billy.fullname())
+
+    def test_fullname_is_only_first_or_lastname_if_other_is_missing(self):
+        billy = User("billyj", firstname="billy")
+        self.assertEquals('billy', billy.fullname())
+
+        johnson = User("billyj", lastname="johnson")
+        self.assertEquals('johnson', johnson.fullname())
+
+    def test_fullname_is_userid_if_no_name_given(self):
+        billyj = User("billyj")
+        self.assertEquals('billyj', billyj.fullname())
+
+    def test_label_is_the_fullname_with_userid_in_braces(self):
+        sammy = User("sammy", firstname="Samuel", lastname="Jackson")
+        self.assertEquals("Jackson Samuel (sammy)", sammy.label())
 
     def test_create_sets_attrs(self):
         attrs = {

@@ -38,10 +38,37 @@ class User(BASE):
 
     def __init__(self, userid, **kwargs):
         self.userid = userid
-        for key, value in kwargs.items():
-            # provoke an AttributeError
-            getattr(self, key)
-            setattr(self, key, value)
+        super(User, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<User %s>' % self.userid
+
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self.userid == other.userid
+        return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+
+    def label(self, with_principal=True):
+        if not with_principal:
+            return self.fullname()
+
+        return "%s (%s)" % (self.fullname(), self.userid)
+
+    def fullname(self):
+        """return a visual representation of the UserPersona as String.
+             - The default is "<lastname> <firstname>"
+             - If either one is missing it is: "<lastname>" or "<firstname>"
+             - The fallback is "<userid>"
+        """
+        parts = []
+        self.lastname and parts.append(self.lastname)
+        self.firstname and parts.append(self.firstname)
+        len(parts) == 0 and parts.append(self.userid)
+
+        return ' '.join(parts)

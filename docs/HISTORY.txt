@@ -2,10 +2,23 @@ Changelog
 =========
 
 
-1.0.4 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add OGDSService which provides an entry point to query data.
+  [phgross, deiferni]
+
+- Add `OrgUnit` and `AdminUnit` model definitions, `OrgUnit` replaces `Client`.
+  [phgross, deiferni]
+
+- Move some functionality from `opengever.core` utility functions to methds on our model classes for better encapsulation.
+  [phgross, deiferni]
+
+- Add common base-class with query helper methods for all models.
+  [phgross, deiferni]
+
+- Add `ftw.builder` SQL-Builders for all model classes.
+  [phgross, deiferni]
 
 
 1.0.3 (2014-06-05)
