@@ -15,6 +15,7 @@ class AdminUnit(BASE):
     ip_address = Column(String(50), nullable=False)
     site_url = Column(String(100), nullable=False)
     public_url = Column(String(100), nullable=False)
+    abbreviation = Column(String(50), nullable=False)
 
     org_units = relationship("OrgUnit", backref="admin_unit")
 

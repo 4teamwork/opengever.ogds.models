@@ -5,6 +5,9 @@ Changelog
 2.0.0 (unreleased)
 ------------------
 
+- Add `abbreviation` column to admin_unit table.
+  [phgross]
+
 - Add OGDSService which provides an entry point to query data.
   [phgross, deiferni]
 
