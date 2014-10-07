@@ -63,6 +63,7 @@ class AdminUnitBuilder(SqlObjectBuilder):
         self.arguments['ip_address'] = '1.2.3.4'
         self.arguments['site_url'] = 'http://example.com'
         self.arguments['public_url'] = 'http://example.com/public'
+        self.arguments['abbreviation'] = 'Client1'
         self.org_unit = None
 
     def wrapping_org_unit(self, org_unit):
