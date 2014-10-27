@@ -36,7 +36,7 @@ class OrgUnit(BASE):
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
-    users_group_id = Column(String(30),
+    users_group_id = Column(String(255),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     users_group = relationship(
@@ -44,7 +44,7 @@ class OrgUnit(BASE):
         backref='org_unit_group',
         primaryjoin=users_group_id == Group.groupid)
 
-    inbox_group_id = Column(String(30),
+    inbox_group_id = Column(String(255),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     inbox_group = relationship(
