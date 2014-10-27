@@ -8,9 +8,9 @@ from sqlalchemy.orm import backref, relation
 # association table
 groups_users = Table(
     'groups_users', BASE.metadata,
-    Column('groupid', String(50),
+    Column('groupid', String(255),
            ForeignKey('groups.groupid'), primary_key=True),
-    Column('userid', String(30),
+    Column('userid', String(255),
            ForeignKey('users.userid'), primary_key=True),
     )
 
