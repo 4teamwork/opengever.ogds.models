@@ -1,10 +1,18 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models.query import BaseQuery
 from sqlalchemy import Column, String, Boolean, Text
+
+
+class UserQuery(BaseQuery):
+
+    searchable_fields = ['userid', 'firstname', 'lastname', 'email']
 
 
 class User(BASE):
     """User model
     """
+
+    query_cls = UserQuery
 
     __tablename__ = 'users'
 
