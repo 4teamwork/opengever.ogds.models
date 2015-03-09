@@ -25,7 +25,7 @@ class BaseQuery(Query):
             # extend the text snippets with the default wildcards
             # and then search for every word seperately
             for word in text_filters:
-                term = '%%{0}%%'.format(word)
+                term = u'%%{0}%%'.format(word)
                 fields = [self._attribute(f) for f in self.searchable_fields]
                 query = query.filter(
                     or_(*[field.like(term) for field in fields]))
