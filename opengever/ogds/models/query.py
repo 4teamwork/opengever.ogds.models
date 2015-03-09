@@ -22,12 +22,18 @@ class BaseQuery(Query):
         query = self
 
         if text_filters:
-            # extend the text snippets with the default wildcards
-            # and then search for every word seperately
             for word in text_filters:
-                term = u'%%{0}%%'.format(word)
+                term = self._add_wildcards(word)
                 fields = [self._attribute(f) for f in self.searchable_fields]
                 query = query.filter(
                     or_(*[field.like(term) for field in fields]))
 
         return query
+
+    def _add_wildcards(self, word):
+        """Add leading and trailing wildcards and replace asterisks with
+        wildcards.
+        """
+
+        word = word.strip('*').replace('*', '%')
+        return u'%{0}%'.format(word)

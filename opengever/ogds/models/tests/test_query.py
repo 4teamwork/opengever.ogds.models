@@ -84,6 +84,17 @@ class TestUserQuery(unittest2.TestCase):
             [self.james],
             User.query.by_searchable_text([u'b\xf6nd']).all())
 
+    def test_handles_asterisk_correctly(self):
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'br*', 'exam*ple']).all())
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'br*']).all())
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'*br']).all())
+
     def test_by_searchable_text_ignores_empty_list(self):
         self.assertEqual(
             [self.jason, self.hugo, self.james],
