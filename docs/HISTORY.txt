@@ -5,7 +5,8 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added query helper `by_searchable_text` to the BaseQuery.
+  [phgross]
 
 
 2.0.1 (2014-10-27)
