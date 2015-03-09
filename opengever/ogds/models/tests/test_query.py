@@ -51,7 +51,7 @@ class TestUserQuery(unittest2.TestCase):
         self.hugo = User('hb', firstname="Hugo", lastname='Bred',
                          email='hugo.bred@example.org')
         self.james = User('007', firstname="James", lastname='Bond',
-                          email='007@example.org')
+                          email=u'b\xf6nd@example.org')
 
         self.session.add(self.jason)
         self.session.add(self.hugo)
@@ -78,6 +78,22 @@ class TestUserQuery(unittest2.TestCase):
         self.assertEqual(
             [self.hugo],
             User.query.by_searchable_text(['Br', 'go']).all())
+
+    def test_handles_no_ascii_characters_correctly(self):
+        self.assertEqual(
+            [self.james],
+            User.query.by_searchable_text([u'b\xf6nd']).all())
+
+    def test_handles_asterisk_correctly(self):
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'br*', 'exam*ple']).all())
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'br*']).all())
+        self.assertEqual(
+            [self.jason, self.hugo],
+            User.query.by_searchable_text([u'*br']).all())
 
     def test_by_searchable_text_ignores_empty_list(self):
         self.assertEqual(
