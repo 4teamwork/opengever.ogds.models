@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.0.2 (unreleased)
+2.1.0 (2015-03-12)
 ------------------
 
 - Added query helper `by_searchable_text` to the BaseQuery.
