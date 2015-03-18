@@ -18,22 +18,24 @@ class BaseQuery(Query):
     def by_searchable_text(self, text_filters=[]):
         """Extends the given `query` with text_filters, a list of text snippets.
         """
+        fields = [self._attribute(f) for f in self.searchable_fields]
+        return extend_query_with_textfilter(self, fields, text_filters)
 
-        query = self
 
-        if text_filters:
-            for word in text_filters:
-                term = self._add_wildcards(word)
-                fields = [self._attribute(f) for f in self.searchable_fields]
-                query = query.filter(
-                    or_(*[field.like(term) for field in fields]))
+def extend_query_with_textfilter(query, fields, text_filters):
+    if text_filters:
+        for word in text_filters:
+            term = _add_wildcards(word)
+            query = query.filter(
+                or_(*[field.like(term) for field in fields]))
 
-        return query
+    return query
 
-    def _add_wildcards(self, word):
-        """Add leading and trailing wildcards and replace asterisks with
-        wildcards.
-        """
 
-        word = word.strip('*').replace('*', '%')
-        return u'%{0}%'.format(word)
+def _add_wildcards(word):
+    """Add leading and trailing wildcards and replace asterisks with
+    wildcards.
+    """
+
+    word = word.strip('*').replace('*', '%')
+    return u'%{0}%'.format(word)
