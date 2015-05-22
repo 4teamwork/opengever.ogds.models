@@ -10,7 +10,7 @@ class AdminUnit(BASE):
     __tablename__ = 'admin_units'
 
     unit_id = Column(String(30), primary_key=True)
-    title = Column(String(30))
+    title = Column(String(255))
     enabled = Column(Boolean(), default=True)
     ip_address = Column(String(50), nullable=False)
     site_url = Column(String(100), nullable=False)

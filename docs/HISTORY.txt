@@ -5,6 +5,11 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
+- Increase several column lengths in preparation for factoring out
+  common column lengths to constants.
+  (Corresponding upgrade-step is in opengever.ogds.base:default)
+  [lgraf]
+
 - Move extend_query_with_textfilter functionality to a separte method.
   [phgross]
 

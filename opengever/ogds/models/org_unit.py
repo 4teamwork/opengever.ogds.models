@@ -32,7 +32,7 @@ class OrgUnit(BASE):
     __tablename__ = 'org_units'
 
     unit_id = Column(String(30), primary_key=True)
-    title = Column(String(30))
+    title = Column(String(255))
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
