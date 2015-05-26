@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import UNIT_ID_LENGTH
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
@@ -9,7 +10,7 @@ class AdminUnit(BASE):
 
     __tablename__ = 'admin_units'
 
-    unit_id = Column(String(30), primary_key=True)
+    unit_id = Column(String(UNIT_ID_LENGTH), primary_key=True)
     title = Column(String(255))
     enabled = Column(Boolean(), default=True)
     ip_address = Column(String(50), nullable=False)
