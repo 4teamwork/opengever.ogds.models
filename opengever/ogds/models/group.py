@@ -1,5 +1,6 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import GROUP_ID_LENGTH
+from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.user import User
 from sqlalchemy import Column, String, Table
 from sqlalchemy import ForeignKey
@@ -11,7 +12,7 @@ groups_users = Table(
     'groups_users', BASE.metadata,
     Column('groupid', String(GROUP_ID_LENGTH),
            ForeignKey('groups.groupid'), primary_key=True),
-    Column('userid', String(255),
+    Column('userid', String(USER_ID_LENGTH),
            ForeignKey('users.userid'), primary_key=True),
     )
 
