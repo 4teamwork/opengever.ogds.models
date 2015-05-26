@@ -1,5 +1,6 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import UNIT_ID_LENGTH
+from opengever.ogds.models import UNIT_TITLE_LENGTH
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.inbox import Inbox
 from sqlalchemy import Boolean
@@ -33,7 +34,7 @@ class OrgUnit(BASE):
     __tablename__ = 'org_units'
 
     unit_id = Column(String(UNIT_ID_LENGTH), primary_key=True)
-    title = Column(String(255))
+    title = Column(String(UNIT_TITLE_LENGTH))
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
