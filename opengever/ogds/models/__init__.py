@@ -3,6 +3,7 @@ from opengever.ogds.models.declarative import query_base
 
 UNIT_ID_LENGTH = 30
 UNIT_TITLE_LENGTH = 255
+GROUP_ID_LENGTH = 255
 
 
 BASE = query_base()

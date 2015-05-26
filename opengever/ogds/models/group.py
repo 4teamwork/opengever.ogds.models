@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models.user import User
 from sqlalchemy import Column, String, Table
 from sqlalchemy import ForeignKey
@@ -8,7 +9,7 @@ from sqlalchemy.orm import backref, relation
 # association table
 groups_users = Table(
     'groups_users', BASE.metadata,
-    Column('groupid', String(255),
+    Column('groupid', String(GROUP_ID_LENGTH),
            ForeignKey('groups.groupid'), primary_key=True),
     Column('userid', String(255),
            ForeignKey('users.userid'), primary_key=True),
@@ -21,7 +22,7 @@ class Group(BASE):
 
     __tablename__ = 'groups'
 
-    groupid = Column(String(255), primary_key=True)
+    groupid = Column(String(GROUP_ID_LENGTH), primary_key=True)
     title = Column(String(50))
 
     users = relation(User, secondary=groups_users,

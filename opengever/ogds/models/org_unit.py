@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models import UNIT_ID_LENGTH
 from opengever.ogds.models import UNIT_TITLE_LENGTH
 from opengever.ogds.models.group import Group
@@ -38,7 +39,7 @@ class OrgUnit(BASE):
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
-    users_group_id = Column(String(255),
+    users_group_id = Column(String(GROUP_ID_LENGTH),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     users_group = relationship(
@@ -46,7 +47,7 @@ class OrgUnit(BASE):
         backref='org_unit_group',
         primaryjoin=users_group_id == Group.groupid)
 
-    inbox_group_id = Column(String(255),
+    inbox_group_id = Column(String(GROUP_ID_LENGTH),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     inbox_group = relationship(
