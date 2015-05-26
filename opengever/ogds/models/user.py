@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import FIRSTNAME_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.query import BaseQuery
 from sqlalchemy import Column, String, Boolean, Text
@@ -19,7 +20,7 @@ class User(BASE):
 
     userid = Column(String(USER_ID_LENGTH), primary_key=True)
     active = Column(Boolean, default=True)
-    firstname = Column(String(255))
+    firstname = Column(String(FIRSTNAME_LENGTH))
     lastname = Column(String(255))
 
     directorate = Column(String(255))
