@@ -1,4 +1,5 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import EMAIL_LENGTH
 from opengever.ogds.models import FIRSTNAME_LENGTH
 from opengever.ogds.models import LASTNAME_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
@@ -29,8 +30,8 @@ class User(BASE):
     department = Column(String(255))
     department_abbr = Column(String(50))
 
-    email = Column(String(255))
-    email2 = Column(String(255))
+    email = Column(String(EMAIL_LENGTH))
+    email2 = Column(String(EMAIL_LENGTH))
     url = Column(String(100))
     phone_office = Column(String(30))
     phone_fax = Column(String(30))
