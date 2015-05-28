@@ -1,4 +1,8 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import EMAIL_LENGTH
+from opengever.ogds.models import FIRSTNAME_LENGTH
+from opengever.ogds.models import LASTNAME_LENGTH
+from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.query import BaseQuery
 from sqlalchemy import Column, String, Boolean, Text
 
@@ -16,18 +20,18 @@ class User(BASE):
 
     __tablename__ = 'users'
 
-    userid = Column(String(255), primary_key=True)
+    userid = Column(String(USER_ID_LENGTH), primary_key=True)
     active = Column(Boolean, default=True)
-    firstname = Column(String(50))
-    lastname = Column(String(50))
+    firstname = Column(String(FIRSTNAME_LENGTH))
+    lastname = Column(String(LASTNAME_LENGTH))
 
-    directorate = Column(String(50))
-    directorate_abbr = Column(String(10))
-    department = Column(String(50))
-    department_abbr = Column(String(10))
+    directorate = Column(String(255))
+    directorate_abbr = Column(String(50))
+    department = Column(String(255))
+    department_abbr = Column(String(50))
 
-    email = Column(String(50))
-    email2 = Column(String(50))
+    email = Column(String(EMAIL_LENGTH))
+    email2 = Column(String(EMAIL_LENGTH))
     url = Column(String(100))
     phone_office = Column(String(30))
     phone_fax = Column(String(30))

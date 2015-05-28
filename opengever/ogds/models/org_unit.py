@@ -1,4 +1,7 @@
 from opengever.ogds.models import BASE
+from opengever.ogds.models import GROUP_ID_LENGTH
+from opengever.ogds.models import UNIT_ID_LENGTH
+from opengever.ogds.models import UNIT_TITLE_LENGTH
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.inbox import Inbox
 from sqlalchemy import Boolean
@@ -31,12 +34,12 @@ class LoneOrgUnitStrategy(object):
 class OrgUnit(BASE):
     __tablename__ = 'org_units'
 
-    unit_id = Column(String(30), primary_key=True)
-    title = Column(String(30))
+    unit_id = Column(String(UNIT_ID_LENGTH), primary_key=True)
+    title = Column(String(UNIT_TITLE_LENGTH))
     enabled = Column(Boolean(), default=True)
 
     # formerly 'group'
-    users_group_id = Column(String(255),
+    users_group_id = Column(String(GROUP_ID_LENGTH),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     users_group = relationship(
@@ -44,7 +47,7 @@ class OrgUnit(BASE):
         backref='org_unit_group',
         primaryjoin=users_group_id == Group.groupid)
 
-    inbox_group_id = Column(String(255),
+    inbox_group_id = Column(String(GROUP_ID_LENGTH),
                             ForeignKey('groups.groupid'),
                             nullable=False)
     inbox_group = relationship(
@@ -52,7 +55,7 @@ class OrgUnit(BASE):
         backref='inbox_group',
         primaryjoin=inbox_group_id == Group.groupid)
 
-    admin_unit_id = Column(String(30),
+    admin_unit_id = Column(String(UNIT_ID_LENGTH),
                            ForeignKey('admin_units.unit_id'),
                            nullable=False)
 
