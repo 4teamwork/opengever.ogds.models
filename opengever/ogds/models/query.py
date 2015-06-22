@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
-from sqlalchemy.orm.util import _entity_descriptor
+from sqlalchemy.orm.base import _entity_descriptor
 
 
 class BaseQuery(Query):
