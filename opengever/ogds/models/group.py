@@ -3,6 +3,7 @@ from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.user import User
 from sqlalchemy import Column
+from sqlalchemy import Boolean
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Table
@@ -27,6 +28,7 @@ class Group(BASE):
     __tablename__ = 'groups'
 
     groupid = Column(String(GROUP_ID_LENGTH), primary_key=True)
+    active = Column(Boolean, default=True)
     title = Column(String(50))
 
     users = relation(User, secondary=groups_users,
