@@ -5,6 +5,10 @@ Changelog
 2.3.0 (unreleased)
 ------------------
 
+- Add `active` column to `Group` model.
+  (Corresponding upgrade-step is in opengever.ogds.base:default)
+  [lgraf]
+
 - Adapt imports for SQLAlchemy 1.x.
   [lgraf]
 
