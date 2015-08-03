@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.3.0 (unreleased)
+2.3.0 (2015-08-03)
 ------------------
 
 - Add `active` column to `Group` model.
