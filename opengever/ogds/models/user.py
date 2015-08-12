@@ -4,10 +4,10 @@ from opengever.ogds.models import FIRSTNAME_LENGTH
 from opengever.ogds.models import LASTNAME_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.query import BaseQuery
+from opengever.ogds.models.types import UnicodeCoercingText
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
-from sqlalchemy import Text
 
 
 class UserQuery(BaseQuery):
@@ -41,7 +41,7 @@ class User(BASE):
     phone_mobile = Column(String(30))
 
     salutation = Column(String(30))
-    description = Column(Text())
+    description = Column(UnicodeCoercingText())
     address1 = Column(String(100))
     address2 = Column(String(100))
     zip_code = Column(String(10))
