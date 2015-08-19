@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.3.1 (unreleased)
+2.3.1 (2015-08-19)
 ------------------
 
 - Add an `UnicodeCoercingText` TypeDecorator for the `Text` type that
