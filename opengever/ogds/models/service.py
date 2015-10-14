@@ -71,6 +71,12 @@ class OGDSService(object):
             query = query.filter_by(enabled=enabled_only)
         return query
 
+    def all_groups(self, active_only=True):
+        query = self._query_group()
+        if active_only:
+            query = query.filter_by(active=True)
+        return query.all()
+
     def _query_org_units(self):
         return self.session.query(OrgUnit).order_by(OrgUnit.title)
 

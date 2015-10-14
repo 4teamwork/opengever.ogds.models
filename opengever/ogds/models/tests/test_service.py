@@ -85,6 +85,9 @@ class TestServiceOrgUnitMethods(OGDSTestCase):
         self.members = create(Builder('ogds_group')
                               .id('group_a')
                               .having(users=[self.hugo]))
+        self.inactive_group = create(Builder('ogds_group')
+                                     .id('group_b')
+                                     .having(active=False))
 
         self.admin_unit_1 = create(Builder('admin_unit').id('admin_1')
                                    .having(title='Admin Unit 1'))
@@ -164,3 +167,10 @@ class TestServiceOrgUnitMethods(OGDSTestCase):
         self.assertSequenceEqual(
             [self.admin_unit_1, self.admin_unit_2, self.admin_unit_3],
             self.service.all_admin_units(enabled_only=False))
+
+    def test_all_groups_returns_active_groups_only_by_default(self):
+        self.assertItemsEqual([self.members], self.service.all_groups())
+
+    def test_all_groups_includes_inactive_groups_when_active_flag_is_false(self):
+        self.assertItemsEqual([self.members, self.inactive_group],
+                               self.service.all_groups(active_only=False))
