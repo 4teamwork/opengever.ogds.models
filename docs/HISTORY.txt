@@ -5,7 +5,8 @@ Changelog
 2.3.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add a method to query ogds groups from the service.
+  [deiferni]
 
 
 2.3.1 (2015-08-19)
