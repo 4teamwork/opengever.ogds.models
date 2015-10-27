@@ -5,6 +5,9 @@ Changelog
 2.3.2 (unreleased)
 ------------------
 
+- Also create plone groups when creating ogds-groups for org-units.
+  [deiferni]
+
 - Add a method to query ogds groups from the service.
   [deiferni]
 
