@@ -137,18 +137,22 @@ class OrgUnitBuilder(SqlObjectBuilder):
         users_inbox_id = "{0}_inbox_users".format(unit_id)
 
         if self._with_users_group:
-            create(Builder('group').with_groupid(users_group_id))
-            users_group = create(Builder('ogds_group')
-                                 .having(groupid=users_group_id,
-                                         users=list(self._group_users)))
-            self.arguments['users_group'] = users_group
+            self._create_users_group(users_group_id)
 
         if self._with_inbox_group:
-            create(Builder('group').with_groupid(users_inbox_id))
-            inbox_group = create(Builder('ogds_group')
-                                 .having(groupid=users_inbox_id,
-                                         users=list(self._inbox_users)))
-            self.arguments['inbox_group'] = inbox_group
+            self._create_inbox_group(users_inbox_id)
+
+    def _create_users_group(self, users_group_id):
+        users_group = create(Builder('ogds_group')
+                             .having(groupid=users_group_id,
+                                     users=list(self._group_users)))
+        self.arguments['users_group'] = users_group
+
+    def _create_inbox_group(self, users_inbox_id):
+        inbox_group = create(Builder('ogds_group')
+                             .having(groupid=users_inbox_id,
+                                     users=list(self._inbox_users)))
+        self.arguments['inbox_group'] = inbox_group
 
 builder_registry.register('org_unit', OrgUnitBuilder)
 

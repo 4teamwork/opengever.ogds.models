@@ -5,6 +5,10 @@ Changelog
 2.3.2 (unreleased)
 ------------------
 
+- Move plone-group creation to opengever.core and refactor OrgUnitBuilder to have
+  smaller methods that can be overwritten.
+  [deiferni]
+
 - Also create plone groups when creating ogds-groups for org-units.
   [deiferni]
 
