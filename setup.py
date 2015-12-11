@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.3.2.dev0'
+version = '2.4.0'
 maintainer = '4teamwork AG'
 
 tests_require = [
