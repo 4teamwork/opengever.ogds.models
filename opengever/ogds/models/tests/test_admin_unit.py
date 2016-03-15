@@ -11,6 +11,7 @@ class TestAdminUnit(OGDSTestCase):
         self.john = create(Builder('ogds_user').id('john'))
         self.hugo = create(Builder('ogds_user').id('hugo'))
         self.peter = create(Builder('ogds_user').id('peter'))
+        self.jack = create(Builder('ogds_user').id('jack'))
 
         self.members_a = create(Builder('ogds_group')
                                 .id('members_a')
@@ -19,6 +20,10 @@ class TestAdminUnit(OGDSTestCase):
         self.members_b = create(Builder('ogds_group')
                                 .id('members_b')
                                 .having(users=[self.peter, self.hugo]))
+
+        self.members_c = create(Builder('ogds_group')
+                                .id('members_c')
+                                .having(users=[self.jack]))
 
         self.org_unit_a = create(Builder('org_unit')
                                  .id('unita')
@@ -31,6 +36,12 @@ class TestAdminUnit(OGDSTestCase):
                                  .having(title='Unit B',
                                          users_group=self.members_b,
                                          admin_unit_id='canton'))
+
+        self.org_unit_c = create(Builder('org_unit')
+                                 .id('unitc')
+                                 .having(title='Unit C',
+                                         users_group=self.members_c,
+                                         admin_unit_id='other'))
 
         self.admin_unit = create(Builder('admin_unit')
                                  .id('canton')
