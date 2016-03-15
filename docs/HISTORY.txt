@@ -5,7 +5,8 @@ Changelog
 2.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add optimized method for checking if a user is assigned to an `AdminUnit`.
+  [buchi]
 
 
 2.4.1 (2016-03-15)

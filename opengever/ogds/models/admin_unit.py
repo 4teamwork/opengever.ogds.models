@@ -7,6 +7,7 @@ from opengever.ogds.models.user import User
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
+from sqlalchemy import exists
 from sqlalchemy.orm import relationship
 
 
@@ -53,6 +54,12 @@ class AdminUnit(BASE):
             User.userid == groups_users.columns.userid).filter(
             groups_users.columns.groupid == OrgUnit.users_group_id).filter(
             OrgUnit.admin_unit_id == self.unit_id).all()
+
+    def is_user_assigned(self, user):
+        return self.session.query(exists().where(
+            OrgUnit.admin_unit_id == self.unit_id).where(
+            OrgUnit.users_group_id == groups_users.columns.groupid).where(
+            groups_users.columns.userid == user.userid)).scalar()
 
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)

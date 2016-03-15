@@ -79,6 +79,12 @@ class TestAdminUnit(OGDSTestCase):
         self.assertItemsEqual([self.hugo, self.peter, self.john],
                               self.admin_unit.assigned_users())
 
+    def test_is_user_assigned_to_admin_unit_returns_true(self):
+        self.assertTrue(self.admin_unit.is_user_assigned(self.john))
+
+    def test_is_user_assigned_to_admin_unit_returns_false(self):
+        self.assertFalse(self.admin_unit.is_user_assigned(self.jack))
+
     def test_prefix_label(self):
         self.assertEqual(u'Canton Unit / foo',
                          self.admin_unit.prefix_label('foo'))
