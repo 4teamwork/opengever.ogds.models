@@ -1,6 +1,9 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import UNIT_ID_LENGTH
 from opengever.ogds.models import UNIT_TITLE_LENGTH
+from opengever.ogds.models.group import groups_users
+from opengever.ogds.models.org_unit import OrgUnit
+from opengever.ogds.models.user import User
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
@@ -46,10 +49,10 @@ class AdminUnit(BASE):
         return self.title or u''
 
     def assigned_users(self):
-        users = set()
-        for org_unit in self.org_units:
-            users.update(org_unit.assigned_users())
-        return users
+        return self.session.query(User).filter(
+            User.userid == groups_users.columns.userid).filter(
+            groups_users.columns.groupid == OrgUnit.users_group_id).filter(
+            OrgUnit.admin_unit_id == self.unit_id).all()
 
     def prefix_label(self, label):
         return u'{0} / {1}'.format(self.label(), label)
