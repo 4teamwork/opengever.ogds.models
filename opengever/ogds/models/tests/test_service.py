@@ -148,6 +148,27 @@ class TestServiceOrgUnitMethods(OGDSTestCase):
 
         self.assertSequenceEqual([self.unit_a, self.unit_c], units)
 
+    def test_assigned_groups_returns_empty_list_if_no_groups_are_assigned(self):
+        create(Builder('ogds_user').id('chuck.norris'))
+        groups = self.service.assigned_groups('chuck.norris')
+
+        self.assertEqual([], groups)
+
+    def test_assigned_groups_returns_a_list_of_multiple_groups(self):
+        chuck = create(Builder('ogds_user').id('chuck.norris'))
+
+        administrators = create(Builder('ogds_group')
+                                .id('administrators')
+                                .having(users=[chuck]))
+
+        editors = create(Builder('ogds_group')
+                              .id('editors')
+                              .having(users=[chuck]))
+
+        groups = self.service.assigned_groups('chuck.norris')
+
+        self.assertSequenceEqual([administrators, editors], groups)
+
     def test_all_org_units_returns_list_of_all_orgunits(self):
         units = self.service.all_org_units()
 

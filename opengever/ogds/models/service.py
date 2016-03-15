@@ -38,6 +38,11 @@ class OGDSService(object):
         query = query.filter(OrgUnit.enabled==True)
         return query.all()
 
+    def assigned_groups(self, userid):
+        query = self.session.query(Group).join(Group.users)
+        query = query.filter(User.userid == userid)
+        return query.all()
+
     def fetch_org_unit(self, unit_id):
         return self._query_org_units().get(unit_id)
 
