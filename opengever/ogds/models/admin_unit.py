@@ -56,6 +56,10 @@ class AdminUnit(BASE):
             OrgUnit.admin_unit_id == self.unit_id).all()
 
     def is_user_assigned(self, user):
+        if user is None:
+            # There might not be a corresponding OGDS user
+            return False
+
         return self.session.query(exists().where(
             OrgUnit.admin_unit_id == self.unit_id).where(
             OrgUnit.users_group_id == groups_users.columns.groupid).where(

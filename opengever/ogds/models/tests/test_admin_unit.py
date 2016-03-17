@@ -85,6 +85,9 @@ class TestAdminUnit(OGDSTestCase):
     def test_is_user_assigned_to_admin_unit_returns_false(self):
         self.assertFalse(self.admin_unit.is_user_assigned(self.jack))
 
+    def test_is_user_assigned_handles_missing_ogds_user(self):
+        self.assertFalse(self.admin_unit.is_user_assigned(None))
+
     def test_prefix_label(self):
         self.assertEqual(u'Canton Unit / foo',
                          self.admin_unit.prefix_label('foo'))
