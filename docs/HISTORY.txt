@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.4.3 (unreleased)
+2.5.0 (2016-05-02)
 ------------------
 
 - Add assigned_groups method for the OGDSService.
