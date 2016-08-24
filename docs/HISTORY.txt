@@ -5,7 +5,8 @@ Changelog
 2.5.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Made extend_query_with_textfilter case insensitive.
+  [phgross]
 
 
 2.5.0 (2016-05-02)

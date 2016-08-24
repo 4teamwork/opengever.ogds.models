@@ -70,6 +70,11 @@ class TestUserQuery(unittest2.TestCase):
             [self.jason, self.hugo],
             User.query.by_searchable_text(['Br']).all())
 
+    def test_by_searchable_text_is_case_insensitive(self):
+        self.assertEqual(
+            [self.james],
+            User.query.by_searchable_text(['james']).all())
+
     def test_by_searchable_handles_multiple_text_snippets(self):
         self.assertEqual(
             [self.jason, self.hugo],

@@ -39,6 +39,10 @@ class DatabaseLayer(Layer):
         if not self._engine:
             self._engine = create_engine('sqlite://')
 
+            # make like case sensitive, to have the same conditions as we have
+            # with PostgreSQL in production
+            self._engine.execute('PRAGMA case_sensitive_like = ON')
+
             BASE.metadata.bind = self._engine
             BASE.metadata.create_all()
 

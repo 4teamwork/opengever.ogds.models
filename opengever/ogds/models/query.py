@@ -27,7 +27,7 @@ def extend_query_with_textfilter(query, fields, text_filters):
         for word in text_filters:
             term = _add_wildcards(word)
             query = query.filter(
-                or_(*[field.like(term) for field in fields]))
+                or_(*[field.ilike(term) for field in fields]))
 
     return query
 
