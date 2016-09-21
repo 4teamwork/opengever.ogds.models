@@ -5,6 +5,9 @@ Changelog
 2.5.1 (unreleased)
 ------------------
 
+- Make sure extend_query_with_textfilter works also on Integer columns.
+  [phgross]
+
 - Made extend_query_with_textfilter case insensitive.
   [phgross]
 

@@ -1,6 +1,8 @@
 from sqlalchemy import or_
+from sqlalchemy import String
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.base import _entity_descriptor
+from sqlalchemy.sql.expression import cast
 
 
 class BaseQuery(Query):
@@ -27,7 +29,7 @@ def extend_query_with_textfilter(query, fields, text_filters):
         for word in text_filters:
             term = _add_wildcards(word)
             query = query.filter(
-                or_(*[field.ilike(term) for field in fields]))
+                or_(*[cast(field, String).ilike(term) for field in fields]))
 
     return query
 
