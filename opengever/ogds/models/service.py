@@ -26,6 +26,9 @@ class OGDSService(object):
         """
         return self._query_user().get(userid)
 
+    def filter_users(self, query_string):
+        return self._query_user().by_searchable_text(query_string)
+
     def all_users(self):
         return self._query_user().all()
 
@@ -39,7 +42,7 @@ class OGDSService(object):
         return query.all()
 
     def assigned_groups(self, userid):
-        query = self.session.query(Group).join(Group.users)
+        query = Group.query.join(Group.users)
         query = query.filter(User.userid == userid)
         return query.all()
 
@@ -71,7 +74,7 @@ class OGDSService(object):
         return self._query_group().get(groupid)
 
     def _query_admin_units(self, enabled_only=True):
-        query = self.session.query(AdminUnit)
+        query = AdminUnit.query
         if enabled_only:
             query = query.filter_by(enabled=enabled_only)
         return query
@@ -83,10 +86,10 @@ class OGDSService(object):
         return query.all()
 
     def _query_org_units(self):
-        return self.session.query(OrgUnit).order_by(OrgUnit.title)
+        return OrgUnit.query.order_by(OrgUnit.title)
 
     def _query_user(self):
-        return self.session.query(User)
+        return User.query
 
     def _query_group(self):
-        return self.session.query(Group)
+        return Group.query
