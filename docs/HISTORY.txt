@@ -5,6 +5,9 @@ Changelog
 2.5.1 (unreleased)
 ------------------
 
+- Add method to filter users to service.
+  [deiferni]
+
 - Make sure extend_query_with_textfilter works also on Integer columns.
   [phgross]
 

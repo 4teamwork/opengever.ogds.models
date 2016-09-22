@@ -51,6 +51,17 @@ class TestOGDSService(OGDSTestCase):
 
         self.assertItemsEqual([jane], self.service.inactive_users())
 
+    def test_filter_users(self):
+        jane = create(Builder('ogds_user').id('jane')
+                      .having(firstname=u'Jane', lastname=u'Doe'))
+        john = create(Builder('ogds_user').id('john')
+                      .having(firstname=u'John', lastname=u'doe'))
+        peter = create(Builder('ogds_user').id('peter')
+                       .having(firstname=u'Peter', lastname=u'Peter'))
+
+        self.assertEqual([jane, john],
+                         self.service.filter_users(['doe']).all())
+
 
 class TestOrgUnitCounters(OGDSTestCase):
 
