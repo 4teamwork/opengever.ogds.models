@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.5.1 (unreleased)
+2.6.0 (2016-10-18)
 ------------------
 
 - Add method to filter users to service.
