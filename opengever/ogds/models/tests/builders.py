@@ -5,6 +5,7 @@ from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.user import User
+import transaction
 
 
 class SqlObjectBuilder(object):
@@ -39,6 +40,9 @@ class SqlObjectBuilder(object):
 
     def persist(self):
         if self.session.auto_commit:
+            transaction.commit()
+
+        if getattr(self.session, 'auto_flush', False):
             self.db_session.flush()
 
     def add_object_to_session(self, obj):
