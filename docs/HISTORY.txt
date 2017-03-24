@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.6.1 (unreleased)
+2.6.1 (2017-03-24)
 ------------------
 
 - Let sql testing builders commit the transaction. [jone]
