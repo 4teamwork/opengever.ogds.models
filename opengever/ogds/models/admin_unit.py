@@ -6,8 +6,9 @@ from opengever.ogds.models.org_unit import OrgUnit
 from opengever.ogds.models.user import User
 from sqlalchemy import Boolean
 from sqlalchemy import Column
-from sqlalchemy import String
 from sqlalchemy import exists
+from sqlalchemy import literal
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
 
@@ -60,7 +61,7 @@ class AdminUnit(BASE):
             # There might not be a corresponding OGDS user
             return False
 
-        return self.session.query(exists().where(
+        return self.session.query(literal(True)).filter(exists().where(
             OrgUnit.admin_unit_id == self.unit_id).where(
             OrgUnit.users_group_id == groups_users.columns.groupid).where(
             groups_users.columns.userid == user.userid)).scalar()
