@@ -28,8 +28,14 @@ def extend_query_with_textfilter(query, fields, text_filters):
     if text_filters:
         for word in text_filters:
             term = _add_wildcards(word)
-            query = query.filter(
-                or_(*[cast(field, String).ilike(term) for field in fields]))
+
+            expressions = []
+            for field in fields:
+                if not issubclass(field.type.python_type, basestring):
+                    field = cast(field, String)
+                expressions.append(field.ilike(term))
+
+            query = query.filter(or_(*expressions))
 
     return query
 

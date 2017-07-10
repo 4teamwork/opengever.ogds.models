@@ -5,6 +5,8 @@ Changelog
 2.6.2 (unreleased)
 ------------------
 
+- Fixes extend_query_with_textfilter for oracle backends, only cast on not string columns. [phgross]
+
 - Fixes AdminUnits is_user_assigned query for oracle backends. [phgross]
 
 
