@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.6.2 (unreleased)
+2.6.2 (2017-07-11)
 ------------------
 
 - Fixes extend_query_with_textfilter for oracle backends, only cast on not string columns. [phgross]
