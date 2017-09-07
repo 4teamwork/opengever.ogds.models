@@ -4,6 +4,7 @@ from ftw.builder import create
 from opengever.ogds.models.admin_unit import AdminUnit
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.org_unit import OrgUnit
+from opengever.ogds.models.team import Team
 from opengever.ogds.models.user import User
 import transaction
 
@@ -173,7 +174,8 @@ class UserBuilder(SqlObjectBuilder):
         self.arguments['email'] = 'test@example.org'
 
     def in_group(self, group):
-        self.groups.append(group)
+        if group and group not in self.groups:
+            self.groups.append(group)
         return self
 
     def assign_to_org_units(self, org_units):
@@ -200,3 +202,11 @@ class GroupBuilder(SqlObjectBuilder):
         self.arguments['groupid'] = 'testgroup'
 
 builder_registry.register('ogds_group', GroupBuilder)
+
+
+class TeamBuilder(SqlObjectBuilder):
+
+    mapped_class = Team
+    id_argument_name = 'team_id'
+
+builder_registry.register('ogds_team', TeamBuilder)

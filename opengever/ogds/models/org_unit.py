@@ -59,6 +59,8 @@ class OrgUnit(BASE):
                            ForeignKey('admin_units.unit_id'),
                            nullable=False)
 
+    teams = relationship("Team", back_populates="org_unit")
+
     def __init__(self, unit_id, **kwargs):
         self.unit_id = unit_id
         self._chosen_strategy = None
