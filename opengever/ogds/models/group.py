@@ -1,14 +1,16 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
+from opengever.ogds.models.team import Team # noqa
 from opengever.ogds.models.user import User
-from sqlalchemy import Column
 from sqlalchemy import Boolean
+from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy.orm import backref
 from sqlalchemy.orm import relation
+from sqlalchemy.orm import relationship
 
 
 # association table
@@ -33,6 +35,7 @@ class Group(BASE):
 
     users = relation(User, secondary=groups_users,
                      backref=backref('groups'))
+    teams = relationship("Team", back_populates="group")
 
     def __init__(self, groupid, **kwargs):
         self.groupid = groupid
