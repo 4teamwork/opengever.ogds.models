@@ -1,6 +1,7 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
+from opengever.ogds.models.query import BaseQuery
 from opengever.ogds.models.team import Team # noqa
 from opengever.ogds.models.user import User
 from sqlalchemy import Boolean
@@ -23,9 +24,17 @@ groups_users = Table(
 )
 
 
+class GroupQuery(BaseQuery):
+
+    searchable_fields = ['groupid', 'title']
+
+
+
 class Group(BASE):
     """Group model, corresponds to a LDAP group
     """
+
+    query_cls = GroupQuery
 
     __tablename__ = 'groups'
 
@@ -54,3 +63,9 @@ class Group(BASE):
         if result is NotImplemented:
             return result
         return not result
+
+    def id(self):
+        return self.groupid
+
+    def label(self):
+        return self.title or self.groupid

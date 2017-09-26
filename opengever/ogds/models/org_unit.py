@@ -4,6 +4,7 @@ from opengever.ogds.models import UNIT_ID_LENGTH
 from opengever.ogds.models import UNIT_TITLE_LENGTH
 from opengever.ogds.models.group import Group
 from opengever.ogds.models.inbox import Inbox
+from opengever.ogds.models.query import BaseQuery
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
@@ -31,8 +32,16 @@ class LoneOrgUnitStrategy(object):
         return False
 
 
+class OrgUnitQuery(BaseQuery):
+
+    searchable_fields = ['unit_id', 'title']
+
+
 class OrgUnit(BASE):
+
     __tablename__ = 'org_units'
+
+    query_cls = OrgUnitQuery
 
     unit_id = Column(String(UNIT_ID_LENGTH), primary_key=True)
     title = Column(String(UNIT_TITLE_LENGTH))
