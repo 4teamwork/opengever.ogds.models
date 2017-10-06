@@ -6,6 +6,8 @@ Changelog
 ------------------
 
 - Add helper methods and queries for team add and edit form support. [phgross]
+- Add new model Team. [phgross]
+
 
 2.6.2 (2017-07-11)
 ------------------
