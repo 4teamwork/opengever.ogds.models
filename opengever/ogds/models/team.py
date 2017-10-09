@@ -57,3 +57,30 @@ class Team(BASE):
 
     def label(self):
         return u'{} ({})'.format(self.title, self.org_unit.title)
+
+    # TODO: the following methods should be removed when moving
+    # opengever.ogds.models to opengever.core and inherit from
+    # `opengever.base.model.SQLFormSupport` instead.
+
+    def is_editable_by_current_user(self, container):
+        return False
+
+    def is_editable(self):
+        return True
+
+    def get_edit_values(self, fieldnames):
+        values = {}
+        for fieldname in fieldnames:
+            value = getattr(self, fieldname, None)
+            if not value:
+                continue
+
+            values[fieldname] = value
+        return values
+
+    def get_edit_url(self, context):
+        return self.get_url(context, view='edit')
+
+    def update_model(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
