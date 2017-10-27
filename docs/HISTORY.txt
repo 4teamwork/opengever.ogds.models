@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.6.3 (unreleased)
+2.7.0 (2017-10-27)
 ------------------
 
 - Add helper methods and queries for team add and edit form support. [phgross]
