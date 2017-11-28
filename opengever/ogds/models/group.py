@@ -3,7 +3,7 @@ from opengever.ogds.models import GROUP_ID_LENGTH
 from opengever.ogds.models import GROUP_TITLE_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.query import BaseQuery
-from opengever.ogds.models.team import Team # noqa
+from opengever.ogds.models.team import Team  # noqa
 from opengever.ogds.models.user import User
 from sqlalchemy import Boolean
 from sqlalchemy import Column
@@ -28,7 +28,6 @@ groups_users = Table(
 class GroupQuery(BaseQuery):
 
     searchable_fields = ['groupid', 'title']
-
 
 
 class Group(BASE):
