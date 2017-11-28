@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.1 (unreleased)
+2.7.1 (2017-11-28)
 ------------------
 
 - Increase group title length. [phgross]
