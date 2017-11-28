@@ -1,5 +1,6 @@
 from opengever.ogds.models import BASE
 from opengever.ogds.models import GROUP_ID_LENGTH
+from opengever.ogds.models import GROUP_TITLE_LENGTH
 from opengever.ogds.models import USER_ID_LENGTH
 from opengever.ogds.models.query import BaseQuery
 from opengever.ogds.models.team import Team # noqa
@@ -40,7 +41,7 @@ class Group(BASE):
 
     groupid = Column(String(GROUP_ID_LENGTH), primary_key=True)
     active = Column(Boolean, default=True)
-    title = Column(String(50))
+    title = Column(String(GROUP_TITLE_LENGTH))
 
     users = relation(User, secondary=groups_users,
                      backref=backref('groups'))
