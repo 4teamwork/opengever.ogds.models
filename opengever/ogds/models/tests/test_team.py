@@ -83,3 +83,16 @@ class TestTeam(OGDSTestCase):
 
         self.assertEquals(team1, Team.query.get_by_actor_id('team:1'))
         self.assertEquals(team2, Team.query.get_by_actor_id('team:2'))
+
+    def test_get_edit_values_handles_boolean_fields(self):
+        team = Team(title=u'\xc4-Team',
+                    group=self.members,
+                    org_unit=self.org_unit,
+                    active=False)
+
+        self.session.add(team)
+        self.session.commit()
+
+        self.assertEquals(
+            {'title': u'\xc4-Team', 'active': False},
+            team.get_edit_values(['title', 'active']))
