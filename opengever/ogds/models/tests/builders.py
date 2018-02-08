@@ -137,25 +137,30 @@ class OrgUnitBuilder(SqlObjectBuilder):
         return self
 
     def _assemble_groups(self):
-        unit_id = self.arguments.get(self.id_argument_name)
-        users_group_id = "{0}_users".format(unit_id)
-        users_inbox_id = "{0}_inbox_users".format(unit_id)
+        if self._with_users_group or self._with_inbox_group:
+            unit_id = self.arguments.get(self.id_argument_name)
 
         if self._with_users_group:
-            self._create_users_group(users_group_id)
+            users_group_id = "{0}_users".format(unit_id)
+            users_group_title = '{0} Users Group'.format(unit_id)
+            self._create_users_group(users_group_id, users_group_title)
 
         if self._with_inbox_group:
-            self._create_inbox_group(users_inbox_id)
+            users_inbox_id = "{0}_inbox_users".format(unit_id)
+            users_inbox_title = '{0} Inbox Users Group'.format(unit_id)
+            self._create_inbox_group(users_inbox_id, users_inbox_title)
 
-    def _create_users_group(self, users_group_id):
+    def _create_users_group(self, users_group_id, users_group_title=None):
         users_group = create(Builder('ogds_group')
                              .having(groupid=users_group_id,
+                                     title=users_group_title,
                                      users=list(self._group_users)))
         self.arguments['users_group'] = users_group
 
-    def _create_inbox_group(self, users_inbox_id):
+    def _create_inbox_group(self, users_inbox_id, users_inbox_title=None):
         inbox_group = create(Builder('ogds_group')
                              .having(groupid=users_inbox_id,
+                                     title=users_inbox_title,
                                      users=list(self._inbox_users)))
         self.arguments['inbox_group'] = inbox_group
 
@@ -200,6 +205,7 @@ class GroupBuilder(SqlObjectBuilder):
     def __init__(self, session):
         super(GroupBuilder, self).__init__(session)
         self.arguments['groupid'] = 'testgroup'
+        self.arguments['title'] = 'Test Group'
 
 builder_registry.register('ogds_group', GroupBuilder)
 
