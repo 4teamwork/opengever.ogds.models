@@ -10,6 +10,7 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Table
+from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import backref
 from sqlalchemy.orm import relation
 from sqlalchemy.orm import relationship
@@ -43,7 +44,7 @@ class Group(BASE):
     title = Column(String(GROUP_TITLE_LENGTH))
 
     users = relation(User, secondary=groups_users,
-                     backref=backref('groups'))
+                     backref=backref('groups', order_by='Group.groupid'))
     teams = relationship("Team", back_populates="group")
 
     def __init__(self, groupid, **kwargs):

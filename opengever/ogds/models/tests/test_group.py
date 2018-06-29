@@ -47,13 +47,16 @@ class TestGroupModel(OGDSTestCase):
     def test_users_in_group(self):
         john = create(Builder('ogds_user').id('john.doe'))
         users = create(Builder('ogds_group').id('users'))
+        aaaa = create(Builder('ogds_group').id('aaaa'))
         self.commit()
 
         self.assertNotIn(john, users.users)
         users.users.append(john)
+        aaaa.users.append(john)
         self.assertIn(john, users.users)
 
         self.assertIn(john, users.users)
+        self.assertEqual([u'aaaa', u'users'], [group.groupid for group in john.groups])
 
         # remove john from users
         users.users.remove(john)
