@@ -1,6 +1,9 @@
 Introduction
 ============
 
+.. DANGER::
+  This package has been vendored into `opengever.core.ogds <https://github.com/4teamwork/opengever.core/tree/master/opengever/ogds>`_!
+
 This package contains the SQLAlchemy models for the OpenGever directory
 service.
 
